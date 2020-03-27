@@ -36,7 +36,7 @@ variable "detectors_disabled" {
   default     = false
 }
 
-# AWS ElasticSearch detectors specific
+# ElasticSearch detectors specific
 
 variable "heartbeat_disabled" {
   description = "Disable all alerting rules for heartbeat detector"
