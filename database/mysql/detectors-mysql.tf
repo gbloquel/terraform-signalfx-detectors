@@ -29,7 +29,7 @@ resource "signalfx_detector" "mysql_slow" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.mysql_slow_threshold_critical}s"
+		description           = "is too high > ${var.mysql_slow_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.mysql_slow_disabled_critical, var.mysql_slow_disabled, var.detectors_disabled)
@@ -38,7 +38,7 @@ resource "signalfx_detector" "mysql_slow" {
 	}
 
 	rule {
-		description           = "is too high > ${var.mysql_slow_threshold_warning}s"
+		description           = "is too high > ${var.mysql_slow_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.mysql_slow_disabled_warning, var.mysql_slow_disabled, var.detectors_disabled)
