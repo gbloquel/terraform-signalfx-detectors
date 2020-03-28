@@ -12,7 +12,7 @@ resource "signalfx_detector" "heartbeat" {
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.heartbeat_disabled, var.detectors_disabled)
-		notifications         = split(";", coalesce(var.heartbeat_notifications, var.notifications))
+		notifications         = coalescelist(var.heartbeat_notifications, var.notifications)
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} on {{{dimensions}}}"
 	}
 }
