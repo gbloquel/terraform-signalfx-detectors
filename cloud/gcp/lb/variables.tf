@@ -124,7 +124,7 @@ variable "error_rate_4xx_threshold_warning" {
   default     = 50
 }
 
-variable “error_rate_4xx_threshold_number_requests" {
+variable "error_rate_4xx_threshold_number_requests" {
   description = "Number threshold for error_rate_4xx detector"
   type        = number
   default     = 5
@@ -198,7 +198,7 @@ variable "error_rate_5xx_threshold_warning" {
   default     = 30
 }
 
-variable “error_rate_5xx_threshold_number_requests" {
+variable "error_rate_5xx_threshold_number_requests" {
   description = "Number threshold for error_rate_5xx detector"
   type        = number
   default     = 5
