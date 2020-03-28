@@ -223,13 +223,13 @@ resource "signalfx_detector" "hitrate" {
 	program_text = <<-EOF
 		A = data('derive.keyspace_hits', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.hitrate_aggregation_function}
 		B = data('derive.keyspace_misses', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.hitrate_aggregation_function}
-		signal = ((A/(A+B))*100).${var.hitrate_transformation_function}(over='${var.hitrate_transformation_window}')
+		signal = ((A/(A+B))*100).${var.hitrate_transformation_function}(over='${var.hitrate_transformation_window}').publish('signal')
 		detect(when(signal < ${var.hitrate_threshold_critical})).publish('CRIT')
 		detect(when(signal < ${var.hitrate_threshold_warning})).publish('WARN')
 	EOF
 
 	rule {
-		description           = "is too low < ${var.hitrate_threshold_critical}s"
+		description           = "is too low < ${var.hitrate_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.hitrate_disabled_critical, var.hitrate_disabled, var.detectors_disabled)
@@ -238,7 +238,7 @@ resource "signalfx_detector" "hitrate" {
 	}
 
 	rule {
-		description           = "is too low < ${var.hitrate_threshold_warning}s"
+		description           = "is too low < ${var.hitrate_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.hitrate_disabled_warning, var.hitrate_disabled, var.detectors_disabled)
