@@ -123,3 +123,15 @@ variable "too_many_locks_threshold_warning" {
   type        = number
   default     = 70
 }
+
+variable "too_many_locks_aperiodic_duration" {
+  description = "Duration for the too_many_locks block"
+  type        = string
+  default     = "10m"
+}
+
+variable "too_many_locks_aperiodic_percentage" {
+  description = "Percentage for the too_many_locks block"
+  type        = number
+  default     = 0.9
+}
