@@ -58,7 +58,7 @@ resource "signalfx_detector" "execution_time" {
 	EOF
 
 	rule {
-		description           = "are too high > ${var.cexecution_time_threshold_critical}"
+		description           = "are too high > ${var.execution_time_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.execution_time_disabled_critical, var.execution_time_disabled, var.detectors_disabled)
