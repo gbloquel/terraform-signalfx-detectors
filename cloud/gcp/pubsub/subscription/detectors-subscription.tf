@@ -13,7 +13,7 @@ resource "signalfx_detector" "heartbeat" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.heartbeat_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.heartbeat_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} on {{{dimensions}}}"
 	}
 }
 
@@ -32,7 +32,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.oldest_unacked_message_disabled_critical, var.oldest_unacked_message_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.oldest_unacked_message_notifications_critical, var.oldest_unacked_message_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -41,7 +41,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.oldest_unacked_message_disabled_warning, var.oldest_unacked_message_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.oldest_unacked_message_notifications_warning, var.oldest_unacked_message_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
@@ -61,7 +61,7 @@ resource "signalfx_detector" "push_latency" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.push_latency_disabled_critical, var.push_latency_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.push_latency_notifications_critical, var.push_latency_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -70,7 +70,7 @@ resource "signalfx_detector" "push_latency" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.push_latency_disabled_warning, var.push_latency_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.push_latency_notifications_warning, var.push_latency_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }

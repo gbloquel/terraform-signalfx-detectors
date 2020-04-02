@@ -14,7 +14,7 @@ resource "signalfx_detector" "sending_operations" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.sending_operations_disabled_critical, var.sending_operations_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.sending_operations_notifications_critical, var.sending_operations_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -23,7 +23,7 @@ resource "signalfx_detector" "sending_operations" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.sending_operations_disabled_warning, var.sending_operations_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.sending_operations_notifications_warning, var.sending_operations_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
@@ -44,7 +44,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.unavailable_sending_operations_disabled_critical, var.unavailable_sending_operations_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.unavailable_sending_operations_notifications_critical, var.unavailable_sending_operations_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -53,7 +53,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.unavailable_sending_operations_disabled_warning, var.unavailable_sending_operations_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.unavailable_sending_operations_notifications_warning, var.unavailable_sending_operations_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
@@ -76,7 +76,7 @@ resource "signalfx_detector" "unavailable_sending_operations_ratio" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.unavailable_sending_operations_ratio_disabled_critical, var.unavailable_sending_operations_ratio_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.unavailable_sending_operations_ratio_notifications_critical, var.unavailable_sending_operations_ratio_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -85,7 +85,7 @@ resource "signalfx_detector" "unavailable_sending_operations_ratio" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.unavailable_sending_operations_ratio_disabled_warning, var.unavailable_sending_operations_ratio_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.unavailable_sending_operations_ratio_notifications_warning, var.unavailable_sending_operations_ratio_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
