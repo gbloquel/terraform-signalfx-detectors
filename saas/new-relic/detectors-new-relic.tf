@@ -13,7 +13,7 @@ resource "signalfx_detector" "heartbeat" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.heartbeat_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.heartbeat_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} on {{{dimensions}}}"
 	}
 }
 
@@ -32,7 +32,7 @@ resource "signalfx_detector" "app_error_rate" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.app_error_rate_disabled_critical, var.app_error_rate_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.app_error_rate_notifications_critical, var.app_error_rate_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -41,7 +41,7 @@ resource "signalfx_detector" "app_error_rate" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.app_error_rate_disabled_warning, var.app_error_rate_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.app_error_rate_notifications_warning, var.app_error_rate_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
@@ -61,7 +61,7 @@ resource "signalfx_detector" "app_apdex_score" {
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.app_apdex_score_disabled_critical, var.app_apdex_score_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.app_apdex_score_notifications_critical, var.app_apdex_score_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 	rule {
@@ -70,7 +70,7 @@ resource "signalfx_detector" "app_apdex_score" {
 		detect_label          = "WARN"
 		disabled              = coalesce(var.app_apdex_score_disabled_warning, var.app_apdex_score_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.app_apdex_score_notifications_warning, var.app_apdex_score_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{ruleName}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
 }
