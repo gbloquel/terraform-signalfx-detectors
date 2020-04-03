@@ -18,7 +18,7 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "cpu_utilization" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Cloud SQL CPU utilization"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL CPU utilization"
 
 	program_text = <<-EOF
 		A = data('database/cpu/utilization' and ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
@@ -47,7 +47,7 @@ resource "signalfx_detector" "cpu_utilization" {
 }
 
 resource "signalfx_detector" "disk_utilization" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Cloud SQL disk utilization"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL disk utilization"
 
 	program_text = <<-EOF
 		A = data('database/disk/utilization' and ${module.filter-tags.filter_custom})${var.disk_utilization_aggregation_function}
@@ -76,7 +76,7 @@ resource "signalfx_detector" "disk_utilization" {
 }
 
 resource "signalfx_detector" "memory_utilization" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Cloud SQL memory utilization"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL memory utilization"
 
 	program_text = <<-EOF
 		A = data('database/memory/utilization' and ${module.filter-tags.filter_custom})${var.memory_utilization_aggregation_function}
@@ -105,7 +105,7 @@ resource "signalfx_detector" "memory_utilization" {
 }
 
 resource "signalfx_detector" "failover_unavailable" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Cloud SQL failover unavailable"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL failover unavailable"
 
 	program_text = <<-EOF
 		signal = data('database/available_for_failover' and ${module.filter-tags.filter_custom})${var.failover_unavailable_aggregation_function}.${var.failover_unavailable_transformation_function}(over='${var.failover_unavailable_transformation_window}').publish('signal')
