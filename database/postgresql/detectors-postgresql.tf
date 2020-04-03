@@ -24,7 +24,7 @@ resource "signalfx_detector" "too_many_locks" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('pg_xact.num_deadlocks', filter=filter('plugin', 'postgresql')) and ${module.filter-tags.filter_custom})${var.too_many_locks_aggregation_function}.${var.too_many_locks_transformation_function}(over='${var.too_many_locks_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.too_many_locks_threshold_critical}, 'above', lasting('${var.too_many_locks_aperiodic_duration}', ${var.too_many_locks_aperiodic_percentage})).publish('CRIT')
-		aperiodic.above_or_below_detector(signal, ${var.too_many_locks_threshold_warning}, 'above', lasting('${var.too_many_locks_aperiodic_duration}', ${var.too_many_locks_aperiodic_percentage})).publish('WARN')
+		aperiodic.range_detector(signal, ${var.too_many_locks_threshold_warning}, ${var.too_many_locks_threshold_critical}, 'within_range', lasting('${var.too_many_locks_aperiodic_duration}', ${var.too_many_locks_aperiodic_percentage})).publish('WARN')
 	EOF
 
 	rule {
