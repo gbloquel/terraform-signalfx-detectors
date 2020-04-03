@@ -84,7 +84,7 @@ resource "signalfx_detector" "backend_latency" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('https/backend_latencies ', filter=filter('service', 'loadbalancing') and filter('backend_target_type', 'BACKEND_SERVICE') and ${module.filter-tags.filter_custom})${var.backend_latency_aggregation_function}.${var.backend_latency_transformation_function}(over='${var.backend_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.backend_latency_threshold_critical}, 'above', lasting('${var.backend_latency_aperiodic_duration}', ${var.backend_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.above_or_below_detector(signal, ${var.backend_latency_threshold_warning}, 'above', lasting('${var.backend_latency_aperiodic_duration}', ${var.backend_latency_aperiodic_percentage})).publish('WARN')
+		aperiodic.range_detector(signal, ${var.backend_latency_threshold_warning}, ${var.backend_latency_threshold_critical}, 'within_range', lasting('${var.backend_latency_aperiodic_duration}', ${var.backend_latency_aperiodic_percentage})).publish('WARN')
 	EOF
 
 	rule {
@@ -113,7 +113,7 @@ resource "signalfx_detector" "backend_latency_bucket" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('https/backend_latencies ', filter=filter('service', 'loadbalancing') and filter('backend_target_type', 'BACKEND_BUCKET') and ${module.filter-tags.filter_custom})${var.backend_latency_bucket_aggregation_function}.${var.backend_latency_bucket_transformation_function}(over='${var.backend_latency_bucket_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.backend_latency_bucket_threshold_critical}, 'above', lasting('${var.backend_latency_bucket_aperiodic_duration}', ${var.backend_latency_bucket_aperiodic_percentage})).publish('CRIT')
-		aperiodic.above_or_below_detector(signal, ${var.backend_latency_bucket_threshold_warning}, 'above', lasting('${var.backend_latency_bucket_aperiodic_duration}', ${var.backend_latency_bucket_aperiodic_percentage})).publish('WARN')
+		aperiodic.range_detector(signal, ${var.backend_latency_bucket_threshold_warning}, ${var.backend_latency_bucket_threshold_critical}, 'within_range', lasting('${var.backend_latency_bucket_aperiodic_duration}', ${var.backend_latency_bucket_aperiodic_percentage})).publish('WARN')
 	EOF
 
 	rule {
@@ -142,7 +142,7 @@ resource "signalfx_detector" "request_count" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('https/request_count', filter=filter('service', 'loadbalancing') and ${module.filter-tags.filter_custom})${var.request_count_aggregation_function}).rateofchange().${var.request_count_transformation_function}(over='${var.request_count_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.request_count_threshold_critical}, 'above', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage})).publish('CRIT')
-		aperiodic.above_or_below_detector(signal, ${var.request_count_threshold_warning}, 'above', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage})).publish('WARN')
+		aperiodic.range_detector(signal, ${var.request_count_threshold_warning}, ${var.request_count_threshold_critical}, 'within_range', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage})).publish('WARN')
 	EOF
 
 	rule {
