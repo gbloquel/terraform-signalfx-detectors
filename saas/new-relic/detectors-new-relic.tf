@@ -23,7 +23,7 @@ resource "signalfx_detector" "app_error_rate" {
 	program_text = <<-EOF
 		signal = data('Errors/all/errors_per_minute/*' and ${module.filter-tags.filter_custom})${var.app_error_rate_aggregation_function}.${var.app_error_rate_transformation_function}(over='${var.app_error_rate_transformation_window}')
 		detect(when(signal > ${var.app_error_rate_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.app_error_rate_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.app_error_rate_threshold_warning}) and when(signal < ${var.app_error_rate_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -52,7 +52,7 @@ resource "signalfx_detector" "app_apdex_score" {
 	program_text = <<-EOF
 		signal = data('Apdex/score/*' and ${module.filter-tags.filter_custom})${var.app_apdex_score_aggregation_function}.${var.app_apdex_score_transformation_function}(over='${var.app_apdex_score_transformation_window}')
 		detect(when(signal < ${var.app_apdex_score_threshold_critical})).publish('CRIT')
-		detect(when(signal < ${var.app_apdex_score_threshold_warning})).publish('WARN')
+		detect(when(signal < ${var.app_apdex_score_threshold_warning}) and when(signal > ${var.app_apdex_score_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
