@@ -24,7 +24,7 @@ resource "signalfx_detector" "cpu_utilization" {
 		A = data('database/cpu/utilization' and ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
 		signal = (A*100).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cpu_utilization_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.cpu_utilization_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.cpu_utilization_threshold_warning}) and when(signal < ${var.cpu_utilization_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -53,7 +53,7 @@ resource "signalfx_detector" "disk_utilization" {
 		A = data('database/disk/utilization' and ${module.filter-tags.filter_custom})${var.disk_utilization_aggregation_function}
 		signal = (A*100).${var.disk_utilization_transformation_function}(over='${var.disk_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_utilization_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.disk_utilization_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.disk_utilization_threshold_warning}) and when(signal < ${var.disk_utilization_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -82,7 +82,7 @@ resource "signalfx_detector" "memory_utilization" {
 		A = data('database/memory/utilization' and ${module.filter-tags.filter_custom})${var.memory_utilization_aggregation_function}
 		signal = (A*100).${var.memory_utilization_transformation_function}(over='${var.memory_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.memory_utilization_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.memory_utilization_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.memory_utilization_threshold_warning}) and when(signal < ${var.memory_utilization_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -110,7 +110,7 @@ resource "signalfx_detector" "failover_unavailable" {
 	program_text = <<-EOF
 		signal = data('database/available_for_failover' and ${module.filter-tags.filter_custom})${var.failover_unavailable_aggregation_function}.${var.failover_unavailable_transformation_function}(over='${var.failover_unavailable_transformation_window}').publish('signal')
 		detect(when(signal <= ${var.failover_unavailable_threshold_critical})).publish('CRIT')
-		detect(when(signal <= ${var.failover_unavailable_threshold_warning})).publish('WARN')
+		detect(when(signal <= ${var.failover_unavailable_threshold_warning}) and when(signal >= ${var.failover_unavailable_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
