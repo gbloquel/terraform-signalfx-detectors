@@ -24,7 +24,7 @@ resource "signalfx_detector" "cpu_utilization" {
 		A = data('instance/cpu/utilization' and ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
 		signal = (A*100).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cpu_utilization_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.cpu_utilization_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.cpu_utilization_threshold_warning}) and when(signal < ${var.cpu_utilization_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -56,7 +56,7 @@ resource "signalfx_detector" "disk_throttled_bps" {
 		D = data('instance/disk/write_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
 		signal = ((A+B)/(C+D)).scale(100).${var.disk_throttled_bps_transformation_function}(over='${var.disk_throttled_bps_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_throttled_bps_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.disk_throttled_bps_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.disk_throttled_bps_threshold_warning}) and when(signal < ${var.disk_throttled_bps_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -88,7 +88,7 @@ resource "signalfx_detector" "disk_throttled_ops" {
 		D = data('instance/disk/write_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
 		signal = ((A+B)/(C+D)).scale(100).${var.disk_throttled_ops_transformation_function}(over='${var.disk_throttled_ops_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_throttled_ops_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.disk_throttled_ops_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.disk_throttled_ops_threshold_warning}) and when(signal < ${var.disk_throttled_ops_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
