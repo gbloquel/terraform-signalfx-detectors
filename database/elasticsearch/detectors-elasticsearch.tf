@@ -23,7 +23,7 @@ resource "signalfx_detector" "cluster_status_not_green" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.cluster.status', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_status_not_green_aggregation_function}.${var.cluster_status_not_green_transformation_function}(over='${var.cluster_status_not_green_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.cluster_status_not_green_threshold_critical})).publish('CRIT')
-		detect(when(signal >= ${var.cluster_status_not_green_threshold_warning})).publish('WARN')
+		detect(when(signal >= ${var.cluster_status_not_green_threshold_warning}) and when(signal < ${var.cluster_status_not_green_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -52,7 +52,7 @@ resource "signalfx_detector" "cluster_initializing_shards" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.cluster.initializing-shards', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_initializing_shards_aggregation_function}.${var.cluster_initializing_shards_transformation_function}(over='${var.cluster_initializing_shards_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cluster_initializing_shards_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.cluster_initializing_shards_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.cluster_initializing_shards_threshold_warning}) and when(signal < ${var.cluster_initializing_shards_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -81,7 +81,7 @@ resource "signalfx_detector" "cluster_relocating_shards" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.cluster.relocating-shards', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_relocating_shards_aggregation_function}.${var.cluster_relocating_shards_transformation_function}(over='${var.cluster_relocating_shards_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cluster_relocating_shards_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.cluster_relocating_shards_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.cluster_relocating_shards_threshold_warning}) and when(signal < ${var.cluster_relocating_shards_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -110,7 +110,7 @@ resource "signalfx_detector" "cluster_unassigned_shards" {
 	program_text = <<-EOF
 		signal = data('gauge.cluster.unassigned-shards', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_unassigned_shards_aggregation_function}.${var.cluster_unassigned_shards_transformation_function}(over='${var.cluster_unassigned_shards_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cluster_unassigned_shards_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.cluster_unassigned_shards_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.cluster_unassigned_shards_threshold_warning}) and when(signal < ${var.cluster_unassigned_shards_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -139,7 +139,7 @@ resource "signalfx_detector" "jvm_heap_memory_usage" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.jvm.mem.heap-used', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}){var.jvm_heap_memory_usage_aggregation_function}.${var.jvm_heap_memory_usage_transformation_function}(over='${var.jvm_heap_memory_usage_transformation_window}').publish('signal')
 		detect(when(signal > ${var.jvm_heap_memory_usage_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.jvm_heap_memory_usage_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.jvm_heap_memory_usage_threshold_warning}) and when(signal < ${var.jvm_heap_memory_usage_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -170,7 +170,7 @@ resource "signalfx_detector" "jvm_memory_young_usage" {
 		B = data('elasticsearch.jvm.mem.pools.young.max_in_bytes', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.jvm_memory_young_usage_aggregation_function}
 		signal = (A/B).scale(100).${var.jvm_memory_young_usage_transformation_function}(over='${var.jvm_memory_young_usage_transformation_window}').publish('signal')
 		detect(when(signal > ${var.jvm_memory_young_usage_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.jvm_memory_young_usage_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.jvm_memory_young_usage_threshold_warning}) and when(signal < ${var.jvm_memory_young_usage_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -201,7 +201,7 @@ resource "signalfx_detector" "jvm_memory_old_usage" {
 		B = data('elasticsearch.jvm.mem.pools.old.max_in_bytes', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.jvm_memory_old_usage_aggregation_function}
 		signal = (A/B).scale(100).${var.jvm_memory_old_usage_transformation_function}(over='${var.jvm_memory_old_usage_transformation_window}').publish('signal')
 		detect(when(signal > ${var.jvm_memory_old_usage_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.jvm_memory_old_usage_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.jvm_memory_old_usage_threshold_warning}) and when(signal < ${var.jvm_memory_old_usage_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -419,7 +419,7 @@ resource "signalfx_detector" "search_query_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.search.query-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.search_query_change_aggregation_function}.${var.search_query_change_transformation_function}(over='${var.search_query_change_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.search_query_change_threshold_critical})).publish('CRIT')
-		detect(when(signal >= ${var.search_query_change_threshold_warning})).publish('WARN')
+		detect(when(signal >= ${var.search_query_change_threshold_warning}) and when(signal < ${var.search_query_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -448,7 +448,7 @@ resource "signalfx_detector" "fetch_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.search.fetch-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.fetch_change_aggregation_function}.${var.fetch_change_transformation_function}(over='${var.fetch_change_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.fetch_change_threshold_critical})).publish('CRIT')
-		detect(when(signal >= ${var.fetch_change_threshold_warning})).publish('WARN')
+		detect(when(signal >= ${var.fetch_change_threshold_warning}) and when(signal < ${var.fetch_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -477,7 +477,7 @@ resource "signalfx_detector" "field_data_evictions_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.fielddata.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.field_data_evictions_change_aggregation_function}.${var.field_data_evictions_change_transformation_function}(over='${var.field_data_evictions_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.field_data_evictions_change_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.field_data_evictions_change_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.field_data_evictions_change_threshold_warning}) and when(signal < ${var.field_data_evictions_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -506,7 +506,7 @@ resource "signalfx_detector" "query_cache_evictions_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.query-cache.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.query_cache_evictions_change_aggregation_function}.${var.query_cache_evictions_change_transformation_function}(over='${var.query_cache_evictions_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.query_cache_evictions_change_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.query_cache_evictions_change_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.query_cache_evictions_change_threshold_warning}) and when(signal < ${var.query_cache_evictions_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -535,7 +535,7 @@ resource "signalfx_detector" "request_cache_evictions_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.request-cache.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.request_cache_evictions_change_aggregation_function}.${var.request_cache_evictions_change_transformation_function}(over='${var.request_cache_evictions_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.request_cache_evictions_change_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.request_cache_evictions_change_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.request_cache_evictions_change_threshold_warning}) and when(signal < ${var.request_cache_evictions_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -564,7 +564,7 @@ resource "signalfx_detector" "task_time_in_queue_change" {
 	program_text = <<-EOF
 		signal = data('elasticsearch.cluster.task-max-wait-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.task_time_in_queue_change_aggregation_function}.${var.task_time_in_queue_change_transformation_function}(over='${var.task_time_in_queue_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.task_time_in_queue_change_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.task_time_in_queue_change_threshold_warning})).publish('WARN')
+		detect(when(signal > ${var.task_time_in_queue_change_threshold_warning}) and when(signal < ${var.task_time_in_queue_change_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
