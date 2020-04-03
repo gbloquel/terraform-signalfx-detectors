@@ -1,5 +1,5 @@
 resource "signalfx_detector" "sending_operations" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Pub/Sub Topic sending messages operations"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending messages operations"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -29,7 +29,7 @@ resource "signalfx_detector" "sending_operations" {
 }
 
 resource "signalfx_detector" "unavailable_sending_operations" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Pub/Sub Topic sending unavailable messages"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending unavailable messages"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -59,7 +59,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 }
 
 resource "signalfx_detector" "unavailable_sending_operations_ratio" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Pub/Sub Topic sending unavailable messages ratio"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending unavailable messages ratio"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
