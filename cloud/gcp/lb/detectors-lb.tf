@@ -25,7 +25,7 @@ resource "signalfx_detector" "error_rate_4xx" {
 		B = data('https/request_count', filter=filter('service', 'loadbalancing') and ${module.filter-tags.filter_custom}, extrapolation='zero')${var.error_rate_4xx_aggregation_function}
 		signal = ((A/B)*100).${var.error_rate_4xx_transformation_function}(over='${var.error_rate_4xx_transformation_window}').publish('signal')
 		detect(when(signal > ${var.error_rate_4xx_threshold_critical}) and when(B > ${var.error_rate_4xx_threshold_number_requests})).publish('CRIT')
-		detect(when(signal > ${var.error_rate_4xx_threshold_warning}) and when(B > ${var.error_rate_4xx_threshold_number_requests})).publish('WARN')
+		detect(when(signal > ${var.error_rate_4xx_threshold_warning}) and when(B > ${var.error_rate_4xx_threshold_number_requests}) and when(signal < ${var.error_rate_4xx_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -55,7 +55,7 @@ resource "signalfx_detector" "error_rate_5xx" {
 		B = data('https/request_count', filter=filter('service', 'loadbalancing') and ${module.filter-tags.filter_custom}, extrapolation='zero')${var.error_rate_5xx_aggregation_function}
 		signal = ((A/(B+5))*100).${var.error_rate_5xx_transformation_function}(over='${var.error_rate_5xx_transformation_window}').publish('signal')
 		detect(when(signal > ${var.error_rate_5xx_threshold_critical}) and when(B > ${var.error_rate_5xx_threshold_number_requests})).publish('CRIT')
-		detect(when(signal > ${var.error_rate_5xx_threshold_warning}) and when(B > ${var.error_rate_5xx_threshold_number_requests})).publish('WARN')
+		detect(when(signal > ${var.error_rate_5xx_threshold_warning}) and when(B > ${var.error_rate_5xx_threshold_number_requests}) and when(signal < ${var.error_rate_5xx_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
