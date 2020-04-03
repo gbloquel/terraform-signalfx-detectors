@@ -1,5 +1,5 @@
 resource "signalfx_detector" "heartbeat" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] AWS Alb heartbeat"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP instance heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
@@ -18,7 +18,7 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "cpu_utilization" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Compute Engine instance CPU utilization"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine instance CPU utilization"
 
 	program_text = <<-EOF
 		A = data('instance/cpu/utilization' and ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
@@ -47,7 +47,7 @@ resource "signalfx_detector" "cpu_utilization" {
 }
 
 resource "signalfx_detector" "disk_throttled_bps" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Compute Engine instance disk throttled bps"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine instance disk throttled bps"
 
 	program_text = <<-EOF
 		A = data('instance/disk/throttled_read_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
@@ -79,7 +79,7 @@ resource "signalfx_detector" "disk_throttled_bps" {
 }
 
 resource "signalfx_detector" "disk_throttled_ops" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Compute Engine instance Disk Throttled OPS"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine instance Disk Throttled OPS"
 
 	program_text = <<-EOF
 		A = data('instance/disk/throttled_read_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
