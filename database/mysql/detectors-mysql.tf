@@ -25,7 +25,7 @@ resource "signalfx_detector" "mysql_slow" {
 		B = data('cache_size.qcache', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_slow_aggregation_function}
 		signal = (A/B).scale(100).${var.mysql_slow_transformation_function}(over='${var.mysql_slow_transformation_window}')
 		detect(when(signal > ${var.mysql_slow_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.mysql_slow_threshold_warning}) and when(signal < ${var.mysql_slow_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.mysql_slow_threshold_warning}) and when(signal <= ${var.mysql_slow_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
