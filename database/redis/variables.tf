@@ -254,12 +254,6 @@ variable "blocked_clients_threshold_critical" {
   default     = 30
 }
 
-variable "blocked_clients_threshold_warning" {
-  description = "Warning threshold for blocked_clients detector"
-  type        = number
-  default     = 10
-}
-
 # Keyspace_full detectors
 
 variable "keyspace_full_disabled" {
