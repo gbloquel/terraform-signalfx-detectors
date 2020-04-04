@@ -23,7 +23,7 @@ resource "signalfx_detector" "searcher_warmup_time" {
 	program_text = <<-EOF
 		signal = data('gauge.solr.searcher_warmup' and ${module.filter-tags.filter_custom})${var.searcher_warmup_time_aggregation_function}.${var.searcher_warmup_time_transformation_function}(over='${var.searcher_warmup_time_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.searcher_warmup_time_threshold_critical})).publish('CRIT')
-		detect(when(signal >= ${var.searcher_warmup_time_threshold_warning}) and when(signal < ${var.searcher_warmup_time_threshold_critical})).publish('WARN')
+		detect(when(signal >= ${var.searcher_warmup_time_threshold_warning}) and when(signal <= ${var.searcher_warmup_time_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
