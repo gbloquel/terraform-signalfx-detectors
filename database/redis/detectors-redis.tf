@@ -23,7 +23,7 @@ resource "signalfx_detector" "evicted_keys" {
 	program_text = <<-EOF
 		signal = data('counter.evicted_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.evicted_keys_aggregation_function}.${var.evicted_keys_transformation_function}(over='${var.evicted_keys_transformation_window}').publish('signal')
 		detect(when(signal > ${var.evicted_keys_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.evicted_keys_threshold_warning}) and when(signal < ${var.evicted_keys_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.evicted_keys_threshold_warning}) and when(signal <= ${var.evicted_keys_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -51,7 +51,7 @@ resource "signalfx_detector" "expirations" {
 	program_text = <<-EOF
 		signal = data('counter.expired_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.expirations_aggregation_function}.${var.expirations_transformation_function}(over='${var.expirations_transformation_window}').publish('signal')
 		detect(when(signal > ${var.expirations_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.expirations_threshold_warning}) and when(signal < ${var.expirations_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.expirations_threshold_warning}) and when(signal <= ${var.expirations_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -92,14 +92,6 @@ resource "signalfx_detector" "blocked_clients" {
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
-	rule {
-		description           = "is too high > ${var.blocked_clients_threshold_warning}"
-		severity              = "Warning"
-		detect_label          = "WARN"
-		disabled              = coalesce(var.blocked_clients_disabled_warning, var.blocked_clients_disabled, var.detectors_disabled)
-		notifications         = coalescelist(var.blocked_clients_notifications_warning, var.blocked_clients_notifications, var.notifications)
-		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
-	}
 }
 
 resource "signalfx_detector" "keyspace_full" {
@@ -108,7 +100,7 @@ resource "signalfx_detector" "keyspace_full" {
 	program_text = <<-EOF
 		signal = data('gauge.db0_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.keyspace_full_aggregation_function}.delta().abs().${var.keyspace_full_transformation_function}(over='${var.keyspace_full_transformation_window}').publish('signal')
 		detect(when(signal > ${var.keyspace_full_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.keyspace_full_threshold_warning}) and when(signal < ${var.keyspace_full_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.keyspace_full_threshold_warning}) and when(signal <= ${var.keyspace_full_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -138,7 +130,7 @@ resource "signalfx_detector" "memory_used" {
 		B = data('bytes.used_memory_peak', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.memory_used_aggregation_function}
 		signal = ((A/B)*100).${var.memory_used_transformation_function}(over='${var.memory_used_transformation_window}').publish('signal')
 		detect(when(signal > ${var.memory_used_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.memory_used_threshold_warning}) and when(signal < ${var.memory_used_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.memory_used_threshold_warning}) and when(signal <= ${var.memory_used_threshold_critical})).publish('WARN')
 	EOF
 
 rule {
@@ -167,7 +159,7 @@ resource "signalfx_detector" "memory_frag" {
 		A = data('gauge.mem_fragmentation_ratio', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.memory_frag_aggregation_function}
 		signal = (A*100).${var.memory_frag_transformation_function}(over='${var.memory_frag_transformation_window}').publish('signal')
 		detect(when(signal > ${var.memory_frag_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.memory_frag_threshold_warning}) and when(signal < ${var.memory_frag_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.memory_frag_threshold_warning}) and when(signal <= ${var.memory_frag_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -195,7 +187,7 @@ resource "signalfx_detector" "rejected_connections" {
 	program_text = <<-EOF
 		signal = data('counter.rejected_connections', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.rejected_connections_aggregation_function}.${var.rejected_connections_transformation_function}(over='${var.rejected_connections_transformation_window}').publish('signal')
 		detect(when(signal > ${var.rejected_connections_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.rejected_connections_threshold_warning}) and when(signal < ${var.rejected_connections_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.rejected_connections_threshold_warning}) and when(signal <= ${var.rejected_connections_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -225,7 +217,7 @@ resource "signalfx_detector" "hitrate" {
 		B = data('derive.keyspace_misses', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.hitrate_aggregation_function}
 		signal = ((A/(A+B))*100).${var.hitrate_transformation_function}(over='${var.hitrate_transformation_window}').publish('signal')
 		detect(when(signal < ${var.hitrate_threshold_critical})).publish('CRIT')
-		detect(when(signal < ${var.hitrate_threshold_warning}) and when(signal > ${var.hitrate_threshold_critical})).publish('WARN')
+		detect(when(signal < ${var.hitrate_threshold_warning}) and when(signal >= ${var.hitrate_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
