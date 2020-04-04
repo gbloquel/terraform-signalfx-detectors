@@ -23,7 +23,7 @@ resource "signalfx_detector" "mongodb_replication" {
 	program_text = <<-EOF
 		signal = data('gauge.repl.max_lag', filter=filter('plugin', 'mongo') and ${module.filter-tags.filter_custom})${var.mongodb_replication_aggregation_function}.${var.mongodb_replication_transformation_function}(over='${var.mongodb_replication_transformation_window}').publish('signal')
 		detect(when(signal > ${var.mongodb_replication_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.mongodb_replication_threshold_warning}) and when(signal < ${var.mongodb_replication_threshold_critical})).publish('WARN')
+		detect(when(signal > ${var.mongodb_replication_threshold_warning}) and when(signal <= ${var.mongodb_replication_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
