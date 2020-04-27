@@ -97,7 +97,7 @@ variable "concurrent_queries_notifications_critical" {
 variable "concurrent_queries_aggregation_function" {
   description = "Aggregation function and group by for concurrent_queries detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "concurrent_queries_transformation_function" {
@@ -177,7 +177,7 @@ variable "execution_time_notifications_critical" {
 variable "execution_time_aggregation_function" {
   description = "Aggregation function and group by for execution_time detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "execution_time_transformation_function" {
@@ -257,7 +257,7 @@ variable "scanned_bytes_notifications_critical" {
 variable "scanned_bytes_aggregation_function" {
   description = "Aggregation function and group by for scanned_bytes detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "scanned_bytes_transformation_function" {
@@ -337,7 +337,7 @@ variable "scanned_bytes_billed_notifications_critical" {
 variable "scanned_bytes_billed_aggregation_function" {
   description = "Aggregation function and group by for scanned_bytes_billed detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "scanned_bytes_billed_transformation_function" {
@@ -417,7 +417,7 @@ variable "available_slots_notifications_critical" {
 variable "available_slots_aggregation_function" {
   description = "Aggregation function and group by for available_slots detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "available_slots_transformation_function" {
