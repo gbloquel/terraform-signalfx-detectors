@@ -169,7 +169,8 @@ variable "execution_time_notifications_warning" {
 }
 
 variable "execution_time_notifications_critical" {
-  description = "Notification recipients list for critical alerting rule of execution_time detector"
+  description = "Notification recipients list for 
+critical alerting rule of execution_time detector"
   type        = list
   default     = []
 }
@@ -497,7 +498,7 @@ variable "stored_bytes_notifications_critical" {
 variable "stored_bytes_aggregation_function" {
   description = "Aggregation function and group by for stored_bytes detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['dataset_id, 'table'])"
+  default     = ".mean(by=['project_id', 'table'])"
 }
 
 variable "stored_bytes_transformation_function" {
@@ -577,7 +578,7 @@ variable "table_count_notifications_critical" {
 variable "table_count_aggregation_function" {
   description = "Aggregation function and group by for table_count detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['dataset_id'])"
+  default     = ".mean(by=['project_id'])"
 }
 
 variable "table_count_transformation_function" {
@@ -657,7 +658,7 @@ variable "uploaded_bytes_notifications_critical" {
 variable "uploaded_bytes_aggregation_function" {
   description = "Aggregation function and group by for uploaded_bytes detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['dataset_id', 'table'])"
+  default     = ".mean(by=['project_id', 'table'])"
 }
 
 variable "uploaded_bytes_transformation_function" {
@@ -737,7 +738,7 @@ variable "uploaded_bytes_billed_notifications_critical" {
 variable "uploaded_bytes_billed_aggregation_function" {
   description = "Aggregation function and group by for uploaded_bytes_billed detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['dataset_id', 'table'])"
+  default     = ".mean(by=['project_id', 'table'])"
 }
 
 variable "uploaded_bytes_billed_transformation_function" {
