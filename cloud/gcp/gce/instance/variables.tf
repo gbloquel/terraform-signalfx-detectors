@@ -97,7 +97,7 @@ variable "cpu_utilization_notifications_critical" {
 variable "cpu_utilization_aggregation_function" {
   description = "Aggregation function and group by for cpu_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['instance_name'])"
+  default     = ""
 }
 
 variable "cpu_utilization_transformation_function" {
@@ -165,7 +165,7 @@ variable "disk_throttled_bps_notifications_critical" {
 variable "disk_throttled_bps_aggregation_function" {
   description = "Aggregation function and group by for disk_throttled_bps detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".sum(by=['instance_name','device_name'])"
+  default     = ""
 }
 
 variable "disk_throttled_bps_transformation_function" {
@@ -233,7 +233,7 @@ variable "disk_throttled_ops_notifications_critical" {
 variable "disk_throttled_ops_aggregation_function" {
   description = "Aggregation function and group by for disk_throttled_ops detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".sum(by=['instance_name','device_name'])"
+  default     = ""
 }
 
 variable "disk_throttled_ops_transformation_function" {
