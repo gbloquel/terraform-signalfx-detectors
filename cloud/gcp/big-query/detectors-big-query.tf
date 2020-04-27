@@ -1,10 +1,10 @@
 resource "signalfx_detector" "heartbeat" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery heartbeat"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('slots/allocated_for_project_and_job_type' and ${module.filter-tags.filter_custom}).publish('signal')
-		not_reporting.detector(stream=signal, resource_identifier=['dataset_id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
+		not_reporting.detector(stream=signal, resource_identifier=['monitored_resource'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
 	rule {
@@ -18,7 +18,7 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "concurrent_queries" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery concurrent queries"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery concurrent queries"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -48,7 +48,7 @@ resource "signalfx_detector" "concurrent_queries" {
 }
 
 resource "signalfx_detector" "execution_time" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery execution time"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery execution time"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -78,7 +78,7 @@ resource "signalfx_detector" "execution_time" {
 }
 
 resource "signalfx_detector" "scanned_bytes" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Biquery scanned bytes"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery scanned bytes"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -88,7 +88,7 @@ resource "signalfx_detector" "scanned_bytes" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.scanned_bytes_threshold_critical}"
+		description           = "are too high > ${var.scanned_bytes_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.scanned_bytes_disabled_critical, var.scanned_bytes_disabled, var.detectors_disabled)
@@ -97,7 +97,7 @@ resource "signalfx_detector" "scanned_bytes" {
 	}
 
 	rule {
-		description           = "is too high > ${var.scanned_bytes_threshold_warning}"
+		description           = "are too high > ${var.scanned_bytes_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.scanned_bytes_disabled_warning, var.scanned_bytes_disabled, var.detectors_disabled)
@@ -108,7 +108,7 @@ resource "signalfx_detector" "scanned_bytes" {
 }
 
 resource "signalfx_detector" "scanned_bytes_billed" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Biquery scanned bytes billed"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery scanned bytes billed"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -118,7 +118,7 @@ resource "signalfx_detector" "scanned_bytes_billed" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.scanned_bytes_billed_threshold_critical}"
+		description           = "are too high > ${var.scanned_bytes_billed_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.scanned_bytes_billed_disabled_critical, var.scanned_bytes_billed_disabled, var.detectors_disabled)
@@ -127,7 +127,7 @@ resource "signalfx_detector" "scanned_bytes_billed" {
 	}
 
 	rule {
-		description           = "is too high > ${var.scanned_bytes_billed_threshold_warning}"
+		description           = "are too high > ${var.scanned_bytes_billed_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.scanned_bytes_billed_disabled_warning, var.scanned_bytes_billed_disabled, var.detectors_disabled)
@@ -138,7 +138,7 @@ resource "signalfx_detector" "scanned_bytes_billed" {
 }
 
 resource "signalfx_detector" "available_slots" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Biquery available slots"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery available slots"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -148,7 +148,7 @@ resource "signalfx_detector" "available_slots" {
 	EOF
 
 	rule {
-		description           = "is too low < ${var.available_slots_threshold_critical}"
+		description           = "are too low < ${var.available_slots_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.available_slots_disabled_critical, var.available_slots_disabled, var.detectors_disabled)
@@ -157,7 +157,7 @@ resource "signalfx_detector" "available_slots" {
 	}
 
 	rule {
-		description           = "is too low < ${var.available_slots_threshold_warning}"
+		description           = "are too low < ${var.available_slots_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.available_slots_disabled_warning, var.available_slots_disabled, var.detectors_disabled)
@@ -168,7 +168,7 @@ resource "signalfx_detector" "available_slots" {
 }
 
 resource "signalfx_detector" "stored_bytes" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery stored bytes"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery stored bytes"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -178,7 +178,7 @@ resource "signalfx_detector" "stored_bytes" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.stored_bytes_threshold_critical}"
+		description           = "are too high > ${var.stored_bytes_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.stored_bytes_disabled_critical, var.stored_bytes_disabled, var.detectors_disabled)
@@ -187,7 +187,7 @@ resource "signalfx_detector" "stored_bytes" {
 	}
 
 	rule {
-		description           = "is too high > ${var.stored_bytes_threshold_warning}"
+		description           = "are too high > ${var.stored_bytes_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.stored_bytes_disabled_warning, var.stored_bytes_disabled, var.detectors_disabled)
@@ -198,7 +198,7 @@ resource "signalfx_detector" "stored_bytes" {
 }
 
 resource "signalfx_detector" "table_count" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery table count"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery table count"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -228,7 +228,7 @@ resource "signalfx_detector" "table_count" {
 }
 
 resource "signalfx_detector" "uploaded_bytes" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery uploaded bytes"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery uploaded bytes"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -238,7 +238,7 @@ resource "signalfx_detector" "uploaded_bytes" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.uploaded_bytes_threshold_critical}"
+		description           = "are too high > ${var.uploaded_bytes_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.uploaded_bytes_disabled_critical, var.uploaded_bytes_disabled, var.detectors_disabled)
@@ -247,7 +247,7 @@ resource "signalfx_detector" "uploaded_bytes" {
 	}
 
 	rule {
-		description           = "is too high > ${var.uploaded_bytes_threshold_warning}"
+		description           = "are too high > ${var.uploaded_bytes_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.uploaded_bytes_disabled_warning, var.uploaded_bytes_disabled, var.detectors_disabled)
@@ -258,7 +258,7 @@ resource "signalfx_detector" "uploaded_bytes" {
 }
 
 resource "signalfx_detector" "uploaded_bytes_billed" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Bigquery uploaded bytes billed"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP BigQuery uploaded bytes billed"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -268,7 +268,7 @@ resource "signalfx_detector" "uploaded_bytes_billed" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.uploaded_bytes_billed_threshold_critical}"
+		description           = "are too high > ${var.uploaded_bytes_billed_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.uploaded_bytes_billed_disabled_critical, var.uploaded_bytes_billed_disabled, var.detectors_disabled)
@@ -277,7 +277,7 @@ resource "signalfx_detector" "uploaded_bytes_billed" {
 	}
 
 	rule {
-		description           = "is too high > ${var.uploaded_bytes_billed_threshold_warning}"
+		description           = "are too high > ${var.uploaded_bytes_billed_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.uploaded_bytes_billed_disabled_warning, var.uploaded_bytes_billed_disabled, var.detectors_disabled)
