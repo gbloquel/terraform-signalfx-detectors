@@ -1,10 +1,10 @@
 resource "signalfx_detector" "heartbeat" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB heartbeat"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('https/total_latencies' and ${module.filter-tags.filter_custom}).publish('signal')
-		not_reporting.detector(stream=signal, resource_identifier=['backend_name'], duration='${var.heartbeat_timeframe}').publish('CRIT')
+		not_reporting.detector(stream=signal, resource_identifier=['url_map_name'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
 	rule {
@@ -18,7 +18,7 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "error_rate_4xx" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB 4xx errors"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer 4xx error rate"
 
 	program_text = <<-EOF
 		A = data('https/request_count', filter=filter('service', 'loadbalancing') and filter('response_code_class', '400') and ${module.filter-tags.filter_custom}, extrapolation='zero')${var.error_rate_4xx_aggregation_function}
@@ -48,7 +48,7 @@ resource "signalfx_detector" "error_rate_4xx" {
 }
 
 resource "signalfx_detector" "error_rate_5xx" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB 5xx errors"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer 5xx error rate"
 
 	program_text = <<-EOF
 		A = data('https/request_count', filter=filter('service', 'loadbalancing') and filter('response_code_class', '500') and ${module.filter-tags.filter_custom}, extrapolation='zero')${var.error_rate_5xx_aggregation_function}
@@ -78,7 +78,7 @@ resource "signalfx_detector" "error_rate_5xx" {
 }
 
 resource "signalfx_detector" "backend_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB backend latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer backend latency by service"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -107,7 +107,7 @@ resource "signalfx_detector" "backend_latency" {
 }
 
 resource "signalfx_detector" "backend_latency_bucket" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB backend latency bucket"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer backend latency by bucket"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -136,7 +136,7 @@ resource "signalfx_detector" "backend_latency_bucket" {
 }
 
 resource "signalfx_detector" "request_count" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP LB request count"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Load Balancer request count"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
