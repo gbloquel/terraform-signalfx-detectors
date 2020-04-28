@@ -1,10 +1,10 @@
 resource "signalfx_detector" "heartbeat" {
- 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] AWS ALB heartbeat"
+ 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] New Relic application heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('Agent/MetricsReported/count/requests_per_minute/*' and ${module.filter-tags.filter_custom})
-		not_reporting.detector(stream=signal, resource_identifier=['id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
+		not_reporting.detector(stream=signal, resource_identifier=['application'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
 	rule {
