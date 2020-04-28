@@ -76,7 +76,7 @@ resource "signalfx_detector" "disk_utilization" {
 }
 
 resource "signalfx_detector" "disk_utilization_forecast" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL disk utilization forecast"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL disk space is running out"
 
 	program_text = <<-EOF
 		from signalfx.detectors.countdown import countdown
@@ -124,7 +124,7 @@ resource "signalfx_detector" "memory_utilization" {
 }
 
 resource "signalfx_detector" "memory_utilization_forecast" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL memory utilization forecast"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL memory is running out"
 
 	program_text = <<-EOF
 		from signalfx.detectors.countdown import countdown
