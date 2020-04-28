@@ -97,7 +97,7 @@ variable "sending_operations_notifications_critical" {
 variable "sending_operations_aggregation_function" {
   description = "Aggregation function and group by for sending_operations detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['topic_id'])"
+  default     = ""
 }
 
 variable "sending_operations_transformation_function" {
@@ -177,7 +177,7 @@ variable "unavailable_sending_operations_notifications_critical" {
 variable "unavailable_sending_operations_aggregation_function" {
   description = "Aggregation function and group by for unavailable_sending_operations detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['topic_id'])"
+  default     = ""
 }
 
 variable "unavailable_sending_operations_transformation_function" {
@@ -257,7 +257,7 @@ variable "unavailable_sending_operations_ratio_notifications_critical" {
 variable "unavailable_sending_operations_ratio_aggregation_function" {
   description = "Aggregation function and group by for unavailable_sending_operations_ratio detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".sum(by=['topic_id'])"
+  default     = ""
 }
 
 variable "unavailable_sending_operations_ratio_transformation_function" {
