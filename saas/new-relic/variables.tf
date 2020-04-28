@@ -97,7 +97,7 @@ variable "app_error_rate_notifications_critical" {
 variable "app_error_rate_aggregation_function" {
   description = "Aggregation function and group by for app_error_rate detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "app_error_rate_transformation_function" {
@@ -165,7 +165,7 @@ variable "app_apdex_score_notifications_critical" {
 variable "app_apdex_score_aggregation_function" {
   description = "Aggregation function and group by for app_apdex_score detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ""
 }
 
 variable "app_apdex_score_transformation_function" {
