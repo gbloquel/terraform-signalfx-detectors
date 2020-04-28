@@ -1,5 +1,5 @@
 resource "signalfx_detector" "heartbeat" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub subscription heartbeat"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Subscription heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
@@ -18,7 +18,7 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "oldest_unacked_message" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub subscription oldest unacknowledged message"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Subscription oldest unacknowledged message"
 
 	program_text = <<-EOF
 		signal = data('subscription/oldest_unacked_message_age', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.oldest_unacked_message_aggregation_function}.${var.oldest_unacked_message_transformation_function}(over='${var.oldest_unacked_message_transformation_window}').publish('signal')
@@ -27,7 +27,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 	EOF
 
 	rule {
-		description           = "is too high >= ${var.oldest_unacked_message_threshold_critical}"
+		description           = "is too old >= ${var.oldest_unacked_message_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.oldest_unacked_message_disabled_critical, var.oldest_unacked_message_disabled, var.detectors_disabled)
@@ -36,7 +36,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 	}
 
 	rule {
-		description           = "is too high >= ${var.oldest_unacked_message_threshold_warning}"
+		description           = "is too old >= ${var.oldest_unacked_message_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.oldest_unacked_message_disabled_warning, var.oldest_unacked_message_disabled, var.detectors_disabled)
@@ -47,7 +47,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 }
 
 resource "signalfx_detector" "push_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub subscription latency on push endpoint"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Subscription latency on push endpoint"
 
 	program_text = <<-EOF
 		signal = data('subscription/push_request_latencies', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.push_latency_aggregation_function}.${var.push_latency_transformation_function}(over='${var.push_latency_transformation_window}').publish('signal')
