@@ -97,7 +97,7 @@ variable "error_rate_4xx_notifications_critical" {
 variable "error_rate_4xx_aggregation_function" {
   description = "Aggregation function and group by for error_rate_4xx detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ".sum(by=['forwarding_rule_name'])"
 }
 
 variable "error_rate_4xx_transformation_function" {
@@ -171,7 +171,7 @@ variable "error_rate_5xx_notifications_critical" {
 variable "error_rate_5xx_aggregation_function" {
   description = "Aggregation function and group by for error_rate_5xx detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean()"
+  default     = ".sum(by=['forwarding_rule_name'])"
 }
 
 variable "error_rate_5xx_transformation_function" {
@@ -245,7 +245,7 @@ variable "backend_latency_notifications_critical" {
 variable "backend_latency_aggregation_function" {
   description = "Aggregation function and group by for backend_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".min(by=['backend_target_name'])"
+  default     = ".min(by=['backend_target_name', 'forwarding_rule_name'])"
 }
 
 variable "backend_latency_transformation_function" {
@@ -325,7 +325,7 @@ variable "backend_latency_bucket_notifications_critical" {
 variable "backend_latency_bucket_aggregation_function" {
   description = "Aggregation function and group by for backend_latency_bucket detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".min(by=['backend_target_name'])"
+  default     = ".min(by=['backend_target_name', 'forwarding_rule_name'])"
 }
 
 variable "backend_latency_bucket_transformation_function" {
