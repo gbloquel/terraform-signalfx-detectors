@@ -74,3 +74,23 @@ resource "signalfx_detector" "push_latency" {
 	}
 
 }
+
+resource "signalfx_detector" "push_latency_anomaly" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub subscription latency on push endpoint changed abnormally"
+
+	program_text = <<-EOF
+		from signalfx.detectors.against_recent import against_recent
+		signal = data('subscription/push_request_latencies', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.push_latency_anomaly_aggregation_function}.${var.push_latency_anomaly_transformation_function}(over='${var.push_latency_anomaly_transformation_window}').publish('signal')
+		against_recent.detector_mean_std(signal, current_window=duration('${var.push_latency_anomaly_current_window}'), historical_window=duration('${var.push_latency_anomaly_historical_window}'), fire_num_stddev=${var.push_latency_anomaly_fire_num_stddev}, clear_num_stddev=${var.push_latency_anomaly_clear_num_stddev}, orientation='${var.push_latency_anomaly_orientation}', calculation_mode='${var.push_latency_anomaly_calculation_mode}').publish('CRIT')
+	EOF
+
+	rule {
+		description           = "at >= ${var.push_latency_anomaly_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.push_latency_anomaly_disabled_critical, var.push_latency_anomaly_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.push_latency_anomaly_notifications_critical, var.push_latency_anomaly_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+}
