@@ -257,7 +257,7 @@ variable "unavailable_sending_operations_ratio_notifications_critical" {
 variable "unavailable_sending_operations_ratio_aggregation_function" {
   description = "Aggregation function and group by for unavailable_sending_operations_ratio detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['topic_id'])"
+  default     = ".sum(by=['topic_id'])"
 }
 
 variable "unavailable_sending_operations_ratio_transformation_function" {
