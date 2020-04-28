@@ -97,7 +97,7 @@ variable "cpu_utilization_notifications_critical" {
 variable "cpu_utilization_aggregation_function" {
   description = "Aggregation function and group by for cpu_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ""
+  default     = ".mean(by=['database_id'])"
 }
 
 variable "cpu_utilization_transformation_function" {
@@ -165,7 +165,7 @@ variable "disk_utilization_notifications_critical" {
 variable "disk_utilization_aggregation_function" {
   description = "Aggregation function and group by for disk_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ""
+  default     = ".mean(by=['database_id'])"
 }
 
 variable "disk_utilization_transformation_function" {
@@ -190,6 +190,68 @@ variable "disk_utilization_threshold_warning" {
   description = "Warning threshold for disk_utilization detector"
   type        = number
   default     = 80
+}
+
+# Disk_utilization_forecast detectors
+
+variable "disk_utilization_forecast_disabled" {
+  description = "Disable all alerting rules for disk_utilization_forecast detector"
+  type        = bool
+  default     = null
+}
+
+variable "disk_utilization_forecast_maximum_capacity" {
+  description = "When to consider disk full, defined as a percentage"
+  type        = number
+  default     = 95
+}
+
+variable "disk_utilization_forecast_hours_till_full" {
+  description = "How many hours before disk is projected to be full do you want to be alerted"
+  type        = number
+  default     = 72
+}
+
+variable "disk_utilization_forecast_fire_lasting_time" {
+  description = "Time condition must be true to fire"
+  type        = string
+  default     = "30m"
+}
+
+variable "disk_utilization_forecast_fire_lasting_time_percent" {
+  description = "Percent of fire lasting time the conditon must be true.  Expressed as decimal"
+  type        = number
+  default     = 0.9
+}
+
+variable "disk_utilization_forecast_clear_hours_remaining" {
+  description = "With how many hours left till disk is full can the alert clear"
+  type        = number
+  default     = 96
+}
+
+variable "disk_utilization_forecast_clear_lasting_time" {
+  description = "Time clear condition must be true to clear"
+  type        = string
+  default     = "30m"
+}
+
+variable "disk_utilization_forecast_clear_lasting_time_percent" {
+  description = "Percent of clear lasting time the conditon must be true.  Expressed as decimal"
+  type        = number
+  default     = 0.9
+}
+
+variable "disk_utilization_forecast_use_ewma" {
+  description = "Use Double EWMA"
+  type        = string
+  default     = "False"
+}
+
+variable "disk_utilization_forecast_notifications" {
+  description = "Notification recipients list for every alerting rules of disk_utilization_forecast detector"
+  type        = list
+  default     = []
 }
 
 # Memory_utilization detectors
@@ -233,7 +295,7 @@ variable "memory_utilization_notifications_critical" {
 variable "memory_utilization_aggregation_function" {
   description = "Aggregation function and group by for memory_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ""
+  default     = ".mean(by=['database_id'])"
 }
 
 variable "memory_utilization_transformation_function" {
@@ -258,6 +320,68 @@ variable "memory_utilization_threshold_warning" {
   description = "Warning threshold for memory_utilization detector"
   type        = number
   default     = 80
+}
+
+# Memory_utilization_forecast detectors
+
+variable "memory_utilization_forecast_disabled" {
+  description = "Disable all alerting rules for memory_utilization_forecast detector"
+  type        = bool
+  default     = null
+}
+
+variable "memory_utilization_forecast_maximum_capacity" {
+  description = "When to consider memory full, defined as a percentage"
+  type        = number
+  default     = 95
+}
+
+variable "memory_utilization_forecast_hours_till_full" {
+  description = "How many hours before memory is projected to be full do you want to be alerted"
+  type        = number
+  default     = 72
+}
+
+variable "memory_utilization_forecast_fire_lasting_time" {
+  description = "Time condition must be true to fire"
+  type        = string
+  default     = "30m"
+}
+
+variable "memory_utilization_forecast_fire_lasting_time_percent" {
+  description = "Percent of fire lasting time the conditon must be true.  Expressed as decimal"
+  type        = number
+  default     = 0.9
+}
+
+variable "memory_utilization_forecast_clear_hours_remaining" {
+  description = "With how many hours left till memory is full can the alert clear"
+  type        = number
+  default     = 96
+}
+
+variable "memory_utilization_forecast_clear_lasting_time" {
+  description = "Time clear condition must be true to clear"
+  type        = string
+  default     = "30m"
+}
+
+variable "memory_utilization_forecast_clear_lasting_time_percent" {
+  description = "Percent of clear lasting time the conditon must be true.  Expressed as decimal"
+  type        = number
+  default     = 0.9
+}
+
+variable "memory_utilization_forecast_use_ewma" {
+  description = "Use Double EWMA"
+  type        = string
+  default     = "False"
+}
+
+variable "memory_utilization_forecast_notifications" {
+  description = "Notification recipients list for every alerting rules of memory_utilization_forecast detector"
+  type        = list
+  default     = []
 }
 
 # Failover_unavailable detectors
@@ -301,7 +425,7 @@ variable "failover_unavailable_notifications_critical" {
 variable "failover_unavailable_aggregation_function" {
   description = "Aggregation function and group by for failover_unavailable detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ""
+  default     = ".mean(by=['database_id'])"
 }
 
 variable "failover_unavailable_transformation_function" {
