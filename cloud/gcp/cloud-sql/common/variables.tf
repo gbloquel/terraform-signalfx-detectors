@@ -201,7 +201,7 @@ variable "disk_utilization_forecast_disabled" {
 }
 
 variable "disk_utilization_forecast_maximum_capacity" {
-  description = "When to consider disk full, defined as fractional decimal
+  description = "When to consider disk full, defined as fractional decimal"
   type        = number
   default     = .95
 }
