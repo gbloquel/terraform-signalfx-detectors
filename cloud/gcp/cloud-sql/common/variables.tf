@@ -97,7 +97,7 @@ variable "cpu_utilization_notifications_critical" {
 variable "cpu_utilization_aggregation_function" {
   description = "Aggregation function and group by for cpu_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['database_id'])"
+  default     = ""
 }
 
 variable "cpu_utilization_transformation_function" {
@@ -165,7 +165,7 @@ variable "disk_utilization_notifications_critical" {
 variable "disk_utilization_aggregation_function" {
   description = "Aggregation function and group by for disk_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['database_id'])"
+  default     = ""
 }
 
 variable "disk_utilization_transformation_function" {
@@ -233,7 +233,7 @@ variable "memory_utilization_notifications_critical" {
 variable "memory_utilization_aggregation_function" {
   description = "Aggregation function and group by for memory_utilization detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['database_id'])"
+  default     = ""
 }
 
 variable "memory_utilization_transformation_function" {
@@ -301,7 +301,7 @@ variable "failover_unavailable_notifications_critical" {
 variable "failover_unavailable_aggregation_function" {
   description = "Aggregation function and group by for failover_unavailable detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['database_id'])"
+  default     = ""
 }
 
 variable "failover_unavailable_transformation_function" {
