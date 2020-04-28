@@ -97,7 +97,7 @@ variable "replication_lag_notifications_critical" {
 variable "replication_lag_aggregation_function" {
   description = "Aggregation function and group by for replication_lag detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['database_id'])"
+  default     = ""
 }
 
 variable "replication_lag_transformation_function" {
