@@ -1,5 +1,5 @@
 resource "signalfx_detector" "sending_operations" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending messages operations"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Topic sending messages operations"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -9,7 +9,7 @@ resource "signalfx_detector" "sending_operations" {
 	EOF
 
 	rule {
-		description           = "is too low <= ${var.sending_operations_threshold_critical}"
+		description           = "are too low <= ${var.sending_operations_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.sending_operations_disabled_critical, var.sending_operations_disabled, var.detectors_disabled)
@@ -18,7 +18,7 @@ resource "signalfx_detector" "sending_operations" {
 	}
 
 	rule {
-		description           = "is too low <= ${var.sending_operations_threshold_warning}"
+		description           = "are too low <= ${var.sending_operations_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.sending_operations_disabled_warning, var.sending_operations_disabled, var.detectors_disabled)
@@ -29,7 +29,7 @@ resource "signalfx_detector" "sending_operations" {
 }
 
 resource "signalfx_detector" "unavailable_sending_operations" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending unavailable messages"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Topic sending unavailable messages"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -39,7 +39,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.unavailable_sending_operations_threshold_critical}"
+		description           = "are too high > ${var.unavailable_sending_operations_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.unavailable_sending_operations_disabled_critical, var.unavailable_sending_operations_disabled, var.detectors_disabled)
@@ -48,7 +48,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 	}
 
 	rule {
-		description           = "is too high > ${var.unavailable_sending_operations_threshold_warning}"
+		description           = "are too high > ${var.unavailable_sending_operations_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.unavailable_sending_operations_disabled_warning, var.unavailable_sending_operations_disabled, var.detectors_disabled)
@@ -59,7 +59,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 }
 
 resource "signalfx_detector" "unavailable_sending_operations_ratio" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP PubSub Topic sending unavailable messages ratio"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Pub/Sub Topic sending unavailable messages ratio"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
