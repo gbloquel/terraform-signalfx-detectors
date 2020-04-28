@@ -97,7 +97,7 @@ variable "oldest_unacked_message_notifications_critical" {
 variable "oldest_unacked_message_aggregation_function" {
   description = "Aggregation function and group by for oldest_unacked_message detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['subscription_id'])"
+  default     = ""
 }
 
 variable "oldest_unacked_message_transformation_function" {
@@ -165,7 +165,7 @@ variable "push_latency_notifications_critical" {
 variable "push_latency_aggregation_function" {
   description = "Aggregation function and group by for push_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['subscription_id'])"
+  default     = ""
 }
 
 variable "push_latency_transformation_function" {
@@ -221,7 +221,7 @@ variable "push_latency_anomaly_notifications_critical" {
 variable "push_latency_anomaly_aggregation_function" {
   description = "Aggregation function and group by for push_latency_anomaly detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['subscription_id'])"
+  default     = ""
 }
 
 variable "push_latency_anomaly_transformation_function" {
