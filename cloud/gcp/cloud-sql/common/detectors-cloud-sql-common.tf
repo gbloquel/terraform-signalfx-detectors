@@ -75,6 +75,25 @@ resource "signalfx_detector" "disk_utilization" {
 	}
 }
 
+resource "signalfx_detector" "disk_utilization_forecast" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL disk utilization forecast"
+
+	program_text = <<-EOF
+		from signalfx.detectors.countdown import countdown
+		signal = data('database/disk/utilization', filter=${module.filter-tags.filter_custom}).publish('signal')
+		countdown.hours_left_stream_incr_detector(stream=signal, maximum_capacity=${var.disk_utilization_forecast_maximum_capacity}, lower_threshold=${var.disk_utilization_forecast_hours_till_full}, fire_lasting=lasting('${var.disk_utilization_forecast_fire_lasting_time}', ${var.disk_utilization_forecast_fire_lasting_time_percent}), clear_threshold=${var.disk_utilization_forecast_clear_hours_remaining}, clear_lasting=lasting('${var.disk_utilization_forecast_clear_lasting_time}', ${var.disk_utilization_forecast_clear_lasting_time_percent}), use_double_ewma=${var.disk_utilization_forecast_use_ewma}).publish('CRIT')
+	EOF
+
+	rule {
+		description           = "in ${var.disk_utilization_forecast_hours_till_full}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.disk_utilization_forecast_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.disk_utilization_forecast_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} on {{{dimensions}}}"
+	}
+}
+
 resource "signalfx_detector" "memory_utilization" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL memory utilization"
 
@@ -101,6 +120,25 @@ resource "signalfx_detector" "memory_utilization" {
 		disabled              = coalesce(var.memory_utilization_disabled_warning, var.memory_utilization_disabled, var.detectors_disabled)
 		notifications         = coalescelist(var.memory_utilization_notifications_warning, var.memory_utilization_notifications, var.notifications)
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+}
+
+resource "signalfx_detector" "memory_utilization_forecast" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL memory utilization forecast"
+
+	program_text = <<-EOF
+		from signalfx.detectors.countdown import countdown
+		signal = data('database/memory/utilization', filter=${module.filter-tags.filter_custom}).publish('signal')
+		countdown.hours_left_stream_incr_detector(stream=signal, maximum_capacity=${var.memory_utilization_forecast_maximum_capacity}, lower_threshold=${var.memory_utilization_forecast_hours_till_full}, fire_lasting=lasting('${var.memory_utilization_forecast_fire_lasting_time}', ${var.memory_utilization_forecast_fire_lasting_time_percent}), clear_threshold=${var.memory_utilization_forecast_clear_hours_remaining}, clear_lasting=lasting('${var.memory_utilization_forecast_clear_lasting_time}', ${var.memory_utilization_forecast_clear_lasting_time_percent}), use_double_ewma=${var.memory_utilization_forecast_use_ewma}).publish('CRIT')
+	EOF
+
+	rule {
+		description           = "in ${var.memory_utilization_forecast_hours_till_full}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.memory_utilization_forecast_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.memory_utilization_forecast_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} on {{{dimensions}}}"
 	}
 }
 
