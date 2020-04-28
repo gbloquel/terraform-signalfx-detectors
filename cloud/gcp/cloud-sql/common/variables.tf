@@ -201,9 +201,9 @@ variable "disk_utilization_forecast_disabled" {
 }
 
 variable "disk_utilization_forecast_maximum_capacity" {
-  description = "When to consider disk full, defined as a percentage"
+  description = "When to consider disk full, defined as fractional decimal
   type        = number
-  default     = 95
+  default     = .95
 }
 
 variable "disk_utilization_forecast_hours_till_full" {
@@ -331,9 +331,9 @@ variable "memory_utilization_forecast_disabled" {
 }
 
 variable "memory_utilization_forecast_maximum_capacity" {
-  description = "When to consider memory full, defined as a percentage"
+  description = "When to consider memory full, defined as a fractional decimal"
   type        = number
-  default     = 95
+  default     = .95
 }
 
 variable "memory_utilization_forecast_hours_till_full" {
