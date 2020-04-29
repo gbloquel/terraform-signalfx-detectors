@@ -559,7 +559,7 @@ resource "signalfx_detector" "request_cache_evictions_change" {
 }
 
 resource "signalfx_detector" "task_time_in_queue_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch change alert on the average time spent by tasks in the queue"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch max time spent by task in queue"
 
 	program_text = <<-EOF
 		signal = data('elasticsearch.cluster.task-max-wait-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.task_time_in_queue_change_aggregation_function}.${var.task_time_in_queue_change_transformation_function}(over='${var.task_time_in_queue_change_transformation_window}').publish('signal')
