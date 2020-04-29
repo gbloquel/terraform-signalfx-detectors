@@ -443,10 +443,12 @@ resource "signalfx_detector" "search_query_change" {
 }
 
 resource "signalfx_detector" "fetch_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch change on the number of search fetches currently running"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch fetches currently running percent change"
 
 	program_text = <<-EOF
-		signal = data('elasticsearch.indices.search.fetch-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.fetch_change_aggregation_function}.${var.fetch_change_transformation_function}(over='${var.fetch_change_transformation_window}').publish('signal')
+		A = data('elasticsearch.indices.search.fetch-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.fetch_change_aggregation_function})
+		B = (A).timeshift('${var.fetch_change_timeshift}')
+		signal = ((B-A)/B*100).${var.fetch_change_transformation_function}(over='${var.fetch_change_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.fetch_change_threshold_critical})).publish('CRIT')
 		detect(when(signal >= ${var.fetch_change_threshold_warning}) and when(signal <= ${var.fetch_change_threshold_critical})).publish('WARN')
 	EOF
@@ -472,10 +474,10 @@ resource "signalfx_detector" "fetch_change" {
 }
 
 resource "signalfx_detector" "field_data_evictions_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch change alert on the total number of evictions from the fielddata cache"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch fielddata cache evictions rate of change"
 
 	program_text = <<-EOF
-		signal = data('elasticsearch.indices.fielddata.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.field_data_evictions_change_aggregation_function}.${var.field_data_evictions_change_transformation_function}(over='${var.field_data_evictions_change_transformation_window}').publish('signal')
+		signal = data('elasticsearch.indices.fielddata.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.field_data_evictions_change_aggregation_function}.${var.field_data_evictions_change_transformation_function}(over='${var.field_data_evictions_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.field_data_evictions_change_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.field_data_evictions_change_threshold_warning}) and when(signal <= ${var.field_data_evictions_change_threshold_critical})).publish('WARN')
 	EOF
@@ -501,7 +503,7 @@ resource "signalfx_detector" "field_data_evictions_change" {
 }
 
 resource "signalfx_detector" "query_cache_evictions_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch change alert on the number of query cache evictions"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch query cache evictions rate of change"
 
 	program_text = <<-EOF
 		signal = data('elasticsearch.indices.query-cache.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.query_cache_evictions_change_aggregation_function}.${var.query_cache_evictions_change_transformation_function}(over='${var.query_cache_evictions_change_transformation_window}').publish('signal')
@@ -530,10 +532,10 @@ resource "signalfx_detector" "query_cache_evictions_change" {
 }
 
 resource "signalfx_detector" "request_cache_evictions_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch change alert on the number of request cache evictions"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch request cache evictions rate of change"
 
 	program_text = <<-EOF
-		signal = data('elasticsearch.indices.request-cache.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.request_cache_evictions_change_aggregation_function}.${var.request_cache_evictions_change_transformation_function}(over='${var.request_cache_evictions_change_transformation_window}').publish('signal')
+		signal = data('elasticsearch.indices.request-cache.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.request_cache_evictions_change_aggregation_function}.${var.request_cache_evictions_change_transformation_function}(over='${var.request_cache_evictions_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.request_cache_evictions_change_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.request_cache_evictions_change_threshold_warning}) and when(signal <= ${var.request_cache_evictions_change_threshold_critical})).publish('WARN')
 	EOF
@@ -559,10 +561,10 @@ resource "signalfx_detector" "request_cache_evictions_change" {
 }
 
 resource "signalfx_detector" "task_time_in_queue_change" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch max time spent by task in queue"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch max time spent by task in queue rate of change"
 
 	program_text = <<-EOF
-		signal = data('elasticsearch.cluster.task-max-wait-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).rateofchange()${var.task_time_in_queue_change_aggregation_function}.${var.task_time_in_queue_change_transformation_function}(over='${var.task_time_in_queue_change_transformation_window}').publish('signal')
+		signal = data('elasticsearch.cluster.task-max-wait-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.task_time_in_queue_change_aggregation_function}.${var.task_time_in_queue_change_transformation_function}(over='${var.task_time_in_queue_change_transformation_window}').publish('signal')
 		detect(when(signal > ${var.task_time_in_queue_change_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.task_time_in_queue_change_threshold_warning}) and when(signal <= ${var.task_time_in_queue_change_threshold_critical})).publish('WARN')
 	EOF
