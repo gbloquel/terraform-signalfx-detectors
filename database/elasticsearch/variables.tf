@@ -1056,6 +1056,13 @@ variable "search_query_change_aggregation_function" {
   default     = ".mean(by=['cluster'])"
 }
 
+
+variable "search_query_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "10m"
+}
+
 variable "search_query_change_transformation_function" {
   description = "Transformation function for search_query_change detector (mean, min, max)"
   type        = string
@@ -1136,6 +1143,12 @@ variable "fetch_change_aggregation_function" {
   default     = ".mean(by=['cluster'])"
 }
 
+variable "fetch_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "10m"
+}
+
 variable "fetch_change_transformation_function" {
   description = "Transformation function for fetch_change detector (mean, min, max)"
   type        = string
@@ -1158,8 +1171,11 @@ variable "fetch_change_threshold_warning" {
   description = "Warning threshold for fetch_change detector"
   type        = number
   default     = 75
+}variable "fetch_change_transformation_function" {
+  description = "Transformation function for fetch_change detector (mean, min, max)"
+  type        = string
+  default     = "mean"
 }
-
 variable "fetch_change_aperiodic_duration" {
   description = "Duration for the fetch_change block"
   type        = string
@@ -1215,6 +1231,13 @@ variable "field_data_evictions_change_aggregation_function" {
   type        = string
   default     = ".mean(by=['cluster'])"
 }
+
+variable "field_data_evictions_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "15m"
+}
+
 
 variable "field_data_evictions_change_transformation_function" {
   description = "Transformation function for field_data_evictions_change detector (mean, min, max)"
@@ -1294,6 +1317,12 @@ variable "query_cache_evictions_change_aggregation_function" {
   description = "Aggregation function and group by for query_cache_evictions_change detector (i.e. \".mean(by=['host'])\")"
   type        = string
   default     = ".mean(by=['cluster'])"
+}
+
+variable "query_cache_evictions_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "15m"
 }
 
 variable "query_cache_evictions_change_transformation_function" {
@@ -1376,6 +1405,12 @@ variable "request_cache_evictions_change_aggregation_function" {
   default     = ".mean(by=['cluster'])"
 }
 
+variable "request_cache_evictions_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "15m"
+}
+
 variable "request_cache_evictions_change_transformation_function" {
   description = "Transformation function for request_cache_evictions_change detector (mean, min, max)"
   type        = string
@@ -1456,6 +1491,12 @@ variable "task_time_in_queue_change_aggregation_function" {
   default     = ".mean(by=['cluster'])"
 }
 
+variable "task_time_in_queue_change_timeshift" {
+  description = "Time to calculate percent change over (1m, 1h, 1d)"
+  type        = string
+  default     = "10m"
+}
+
 variable "task_time_in_queue_change_transformation_function" {
   description = "Transformation function for task_time_in_queue_change detector (mean, min, max)"
   type        = string
@@ -1472,7 +1513,7 @@ variable "task_time_in_queue_change_threshold_critical" {
   description = "Critical threshold for task_time_in_queue_change detector"
   type        = number
   default     = 200
-}
+}x
 
 variable "task_time_in_queue_change_threshold_warning" {
   description = "Warning threshold for task_time_in_queue_change detector"
