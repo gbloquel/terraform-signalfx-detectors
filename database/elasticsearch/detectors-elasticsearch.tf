@@ -108,13 +108,13 @@ resource "signalfx_detector" "cluster_unassigned_shards" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] ElasticSearch Cluster unassigned shards"
 
 	program_text = <<-EOF
-		signal = data('gauge.cluster.unassigned-shards', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_unassigned_shards_aggregation_function}.${var.cluster_unassigned_shards_transformation_function}(over='${var.cluster_unassigned_shards_transformation_window}').publish('signal')
+		signal = data('elasticsearch.cluster.unassigned-shards', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.cluster_unassigned_shards_aggregation_function}.${var.cluster_unassigned_shards_transformation_function}(over='${var.cluster_unassigned_shards_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cluster_unassigned_shards_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.cluster_unassigned_shards_threshold_warning}) and when(signal <= ${var.cluster_unassigned_shards_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
-		description           = "is too high > ${var.cluster_unassigned_shards_threshold_critical}"
+		description           = "are too high > ${var.cluster_unassigned_shards_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.cluster_unassigned_shards_disabled_critical, var.cluster_unassigned_shards_disabled, var.detectors_disabled)
@@ -123,7 +123,7 @@ resource "signalfx_detector" "cluster_unassigned_shards" {
 	}
 
 	rule {
-		description           = "is too high > ${var.cluster_unassigned_shards_threshold_warning}"
+		description           = "are too high > ${var.cluster_unassigned_shards_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.cluster_unassigned_shards_disabled_warning, var.cluster_unassigned_shards_disabled, var.detectors_disabled)
@@ -225,7 +225,7 @@ resource "signalfx_detector" "jvm_memory_old_usage" {
 }
 
 resource "signalfx_detector" "jvm_gc_old_collection_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average old-generation garbage collections latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch old-generation garbage collections latency"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -257,7 +257,7 @@ resource "signalfx_detector" "jvm_gc_old_collection_latency" {
 }
 
 resource "signalfx_detector" "jvm_gc_young_collection_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average young-generation garbage collections latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch young-generation garbage collections latency"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -289,7 +289,7 @@ resource "signalfx_detector" "jvm_gc_young_collection_latency" {
 }
 
 resource "signalfx_detector" "indexing_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average indexing latency by document"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch indexing latency"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -321,7 +321,7 @@ resource "signalfx_detector" "indexing_latency" {
 }
 
 resource "signalfx_detector" "flush_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average index flushing to disk latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch index flushing to disk latency"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -353,7 +353,7 @@ resource "signalfx_detector" "flush_latency" {
 }
 
 resource "signalfx_detector" "search_query_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average search query latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch search query latency"
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
@@ -384,11 +384,11 @@ resource "signalfx_detector" "search_query_latency" {
 }
 
 resource "signalfx_detector" "fetch_latency" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch average search fetch latency"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch search fetch latency"
 
 	program_text = <<-EOF
-		A = data('counter.indices.search.fetch-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
-		B = data('counter.indices.search.fetch-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
+		A = data('elasticsearch.indices.search.fetch-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
+		B = data('elasticsearch.indices.search.fetch-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.fetch_latency_transformation_function}(over='${var.fetch_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.fetch_latency_threshold_critical}, 'above', lasting('${var.fetch_latency_aperiodic_duration}', ${var.fetch_latency_aperiodic_percentage})).publish('CRIT')
 		aperiodic.range_detector(signal, ${var.fetch_latency_threshold_warning}, ${var.fetch_latency_threshold_critical}, 'within_range', lasting('${var.fetch_latency_aperiodic_duration}', ${var.fetch_latency_aperiodic_percentage})).publish('WARN')
