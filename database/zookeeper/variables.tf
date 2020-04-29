@@ -97,7 +97,7 @@ variable "zookeeper_latency_notifications_critical" {
 variable "zookeeper_latency_aggregation_function" {
   description = "Aggregation function and group by for zookeeper_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "zookeeper_latency_transformation_function" {
