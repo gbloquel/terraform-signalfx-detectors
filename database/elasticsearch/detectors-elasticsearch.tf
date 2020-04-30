@@ -352,6 +352,26 @@ resource "signalfx_detector" "flush_latency" {
 
 }
 
+resource "signalfx_detector" "http_connections_anomaly" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch number of open HTTP connection anomaly"
+
+	program_text = <<-EOF
+		from signalfx.detectors.against_periods import against_periods
+		signal = data('elasticsearch.http.current_open', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.http_connections_anomaly_aggregation_function}.${var.http_connections_anomaly_transformation_function}(over='${var.http_connections_anomaly_transformation_window}').publish('signal')
+		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.http_connections_anomaly_window_to_compare}'), space_between_windows=duration('${var.http_connections_anomaly_space_between_windows}'), num_windows=${var.http_connections_anomaly_num_windows}, fire_growth_rate_threshold=${var.http_connections_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.http_connections_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=${var.http_connections_anomaly_discard_historical_outliers}, orientation='${var.http_connections_anomaly_orientation}').publish('CRIT')
+	EOF
+
+	rule {
+		description           = "is too high > ${var.http_connections_anomaly_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.http_connections_anomaly_disabled_critical, var.http_connections_anomaly_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.http_connections_anomaly_notifications_critical, var.http_connections_anomaly_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+}
+
 resource "signalfx_detector" "search_query_latency" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch search query latency"
 
@@ -419,7 +439,8 @@ resource "signalfx_detector" "search_query_change" {
 	program_text = <<-EOF
 		A = data('elasticsearch.indices.search.query-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.search_query_change_aggregation_function}
 		B = (A).timeshift('${var.search_query_change_timeshift}')
-		signal = ((B-A)/B*100).${var.search_query_change_transformation_function}(over='${var.search_query_change_transformation_window}').publish('signal')detect(when(signal >= ${var.search_query_change_threshold_critical})).publish('CRIT')
+		signal = ((B-A)/B*100).${var.search_query_change_transformation_function}(over='${var.search_query_change_transformation_window}').publish('signal')
+		detect(when(signal >= ${var.search_query_change_threshold_critical})).publish('CRIT')
 		detect(when(signal >= ${var.search_query_change_threshold_warning}) and when(signal <= ${var.search_query_change_threshold_critical})).publish('WARN')
 	EOF
 
@@ -480,7 +501,8 @@ resource "signalfx_detector" "field_data_evictions_change" {
 	program_text = <<-EOF
 		A = data('elasticsearch.indices.fielddata.evictions', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.field_data_evictions_change_aggregation_function}
 		B = (A).timeshift('${var.field_data_evictions_change_timeshift}')
-		signal = (A-B).${var.field_data_evictions_change_transformation_function}(over='${var.field_data_evictions_change_transformation_window}').publish('signal')detect(when(signal > ${var.field_data_evictions_change_threshold_critical})).publish('CRIT')
+		signal = (A-B).${var.field_data_evictions_change_transformation_function}(over='${var.field_data_evictions_change_transformation_window}').publish('signal')
+		detect(when(signal > ${var.field_data_evictions_change_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.field_data_evictions_change_threshold_warning}) and when(signal <= ${var.field_data_evictions_change_threshold_critical})).publish('WARN')
 	EOF
 
