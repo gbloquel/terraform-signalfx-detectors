@@ -852,6 +852,110 @@ variable "flush_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
+# Http_connections_anomaly detectors
+
+variable "http_connections_anomaly_disabled" {
+  description = "Disable all alerting rules for http_connections_anomaly detector"
+  type        = bool
+  default     = null
+}
+
+variable "http_connections_anomaly_disabled_critical" {
+  description = "Disable critical alerting rule for http_connections_anomaly detector"
+  type        = bool
+  default     = null
+}
+
+variable "http_connections_anomaly_disabled_warning" {
+  description = "Disable warning alerting rule for http_connections_anomaly detector"
+  type        = bool
+  default     = null
+}
+
+variable "http_connections_anomaly_notifications" {
+  description = "Notification recipients list for every alerting rules of http_connections_anomaly detector"
+  type        = list
+  default     = []
+}
+
+variable "http_connections_anomaly_notifications_warning" {
+  description = "Notification recipients list for warning alerting rule of http_connections_anomaly detector"
+  type        = list
+  default     = []
+}
+
+variable "http_connections_anomaly_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of http_connections_anomaly detector"
+  type        = list
+  default     = []
+}
+
+variable "http_connections_anomaly_aggregation_function" {
+  description = "Aggregation function and group by for http_connections_anomaly detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ".mean(by=['host'])"
+}
+
+variable "http_connections_anomaly_transformation_function" {
+  description = "Transformation function for http_connections_anomaly detector (mean, min, max)"
+  type        = string
+  default     = "mean"
+}
+
+variable "http_connections_anomaly_transformation_window" {
+  description = "Transformation window for http_connections_anomaly detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "15m"
+}
+
+variable "http_connections_anomaly_window_to_compare" {
+  description = "Length of current window (being tested for anomalous values), and historical windows (used to establish a baseline)"
+  type        = string
+  default     = "15m"
+}
+
+variable "http_connections_anomaly_space_between_windows" {
+  description = "Time range reflecting the periodicity of the data stream"
+  type        = string
+  default     = "1d"
+}
+
+variable "http_connections_anomaly_num_windows" {
+  description = "Number of previous periods used to define baseline, must be > 0"
+  type        = number
+  default     = 4
+}
+
+variable "http_connections_anomaly_fire_growth_rate_threshold" {
+  description = "Change over historical norm required to fire, should be >= 0"
+  type        = number
+  default     = 0.2
+}
+
+variable "http_connections_anomaly_clear_growth_rate_threshold" {
+  description = "Change over historical norm required to clear, should be >= 0"
+  type        = number
+  default     = 0.1
+}
+
+variable "http_connections_anomaly_discard_historical_outliers" {
+  description = "Whether to take the median (True) or mean (False) of historical windows"
+  type        = bool
+  default     = "1"
+}
+
+variable "http_connections_anomaly_orientation" {
+  description = "Specifies whether detect fires when signal is above, below, or out-of-band (Options:  above, below, out_of_band)"
+  type        = string
+  default     = "above"
+}
+
+variable "http_connections_anomaly_threshold_critical" {
+  description = "Critical threshold for http_connections_anomaly detector"
+  type        = number
+  default     = 1
+}
+
 # Search_query_latency detectors
 
 variable "search_query_latency_disabled" {
@@ -1171,11 +1275,8 @@ variable "fetch_change_threshold_warning" {
   description = "Warning threshold for fetch_change detector"
   type        = number
   default     = 75
-}variable "fetch_change_transformation_function" {
-  description = "Transformation function for fetch_change detector (mean, min, max)"
-  type        = string
-  default     = "mean"
 }
+
 variable "fetch_change_aperiodic_duration" {
   description = "Duration for the fetch_change block"
   type        = string
@@ -1513,7 +1614,7 @@ variable "task_time_in_queue_change_threshold_critical" {
   description = "Critical threshold for task_time_in_queue_change detector"
   type        = number
   default     = 200
-}x
+}
 
 variable "task_time_in_queue_change_threshold_warning" {
   description = "Warning threshold for task_time_in_queue_change detector"
