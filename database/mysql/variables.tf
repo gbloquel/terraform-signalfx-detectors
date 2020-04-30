@@ -97,7 +97,7 @@ variable "mysql_slow_notifications_critical" {
 variable "mysql_slow_aggregation_function" {
   description = "Aggregation function and group by for mysql_slow detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['server'])"
+  default     = ""
 }
 
 variable "mysql_slow_transformation_function" {
