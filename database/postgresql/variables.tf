@@ -97,7 +97,7 @@ variable "too_many_locks_notifications_critical" {
 variable "too_many_locks_aggregation_function" {
   description = "Aggregation function and group by for too_many_locks detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['server'])"
+  default     = ""
 }
 
 variable "too_many_locks_transformation_function" {
