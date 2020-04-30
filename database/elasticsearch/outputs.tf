@@ -58,6 +58,11 @@ output "flush_latency_id" {
   value       = signalfx_detector.flush_latency.*.id
 }
 
+output "http_connections_anomaly_id" {
+  description = "id for detector http_connections_anomaly"
+  value       = signalfx_detector.http_connections_anomaly.*.id
+}
+
 output "search_query_latency_id" {
   description = "id for detector search_query_latency"
   value       = signalfx_detector.search_query_latency.*.id
