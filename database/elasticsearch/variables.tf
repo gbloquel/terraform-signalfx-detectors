@@ -97,7 +97,7 @@ variable "cluster_status_not_green_notifications_critical" {
 variable "cluster_status_not_green_aggregation_function" {
   description = "Aggregation function and group by for cluster_status_not_green detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".min(by=['cluster'])"
+  default     = ""
 }
 
 variable "cluster_status_not_green_transformation_function" {
@@ -163,7 +163,8 @@ variable "cluster_initializing_shards_notifications_critical" {
 }
 
 variable "cluster_initializing_shards_aggregation_function" {
-  description = "Aggregation function and group by for cluster_initializing_shards detector (i.e. \".mean(by=['host'])\")"
+  description = "
+regation function and group by for cluster_initializing_shards detector (i.e. \".mean(by=['host'])\")"
   type        = string
   default     = ".mean(by=['cluster'])"
 }
@@ -369,7 +370,7 @@ variable "jvm_heap_memory_usage_notifications_critical" {
 variable "jvm_heap_memory_usage_aggregation_function" {
   description = "Aggregation function and group by for jvm_heap_memory_usage detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "jvm_heap_memory_usage_transformation_function" {
@@ -437,7 +438,7 @@ variable "jvm_memory_young_usage_notifications_critical" {
 variable "jvm_memory_young_usage_aggregation_function" {
   description = "Aggregation function and group by for jvm_memory_young_usage detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "jvm_memory_young_usage_transformation_function" {
@@ -505,7 +506,7 @@ variable "jvm_memory_old_usage_notifications_critical" {
 variable "jvm_memory_old_usage_aggregation_function" {
   description = "Aggregation function and group by for jvm_memory_old_usage detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "jvm_memory_old_usage_transformation_function" {
@@ -573,7 +574,7 @@ variable "jvm_gc_old_collection_latency_notifications_critical" {
 variable "jvm_gc_old_collection_latency_aggregation_function" {
   description = "Aggregation function and group by for jvm_gc_old_collection_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "jvm_gc_old_collection_latency_transformation_function" {
@@ -653,7 +654,7 @@ variable "jvm_gc_young_collection_latency_notifications_critical" {
 variable "jvm_gc_young_collection_latency_aggregation_function" {
   description = "Aggregation function and group by for jvm_gc_young_collection_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "jvm_gc_young_collection_latency_transformation_function" {
@@ -733,7 +734,7 @@ variable "indexing_latency_notifications_critical" {
 variable "indexing_latency_aggregation_function" {
   description = "Aggregation function and group by for indexing_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "indexing_latency_transformation_function" {
@@ -813,7 +814,7 @@ variable "flush_latency_notifications_critical" {
 variable "flush_latency_aggregation_function" {
   description = "Aggregation function and group by for flush_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "flush_latency_transformation_function" {
@@ -893,7 +894,7 @@ variable "http_connections_anomaly_notifications_critical" {
 variable "http_connections_anomaly_aggregation_function" {
   description = "Aggregation function and group by for http_connections_anomaly detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "http_connections_anomaly_transformation_function" {
@@ -997,7 +998,7 @@ variable "search_query_latency_notifications_critical" {
 variable "search_query_latency_aggregation_function" {
   description = "Aggregation function and group by for search_query_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "search_query_latency_transformation_function" {
@@ -1077,7 +1078,7 @@ variable "fetch_latency_notifications_critical" {
 variable "fetch_latency_aggregation_function" {
   description = "Aggregation function and group by for fetch_latency detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "fetch_latency_transformation_function" {
@@ -1330,7 +1331,7 @@ variable "field_data_evictions_change_notifications_critical" {
 variable "field_data_evictions_change_aggregation_function" {
   description = "Aggregation function and group by for field_data_evictions_change detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['cluster'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "field_data_evictions_change_timeshift" {
@@ -1417,7 +1418,7 @@ variable "query_cache_evictions_change_notifications_critical" {
 variable "query_cache_evictions_change_aggregation_function" {
   description = "Aggregation function and group by for query_cache_evictions_change detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['cluster'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "query_cache_evictions_change_timeshift" {
@@ -1503,7 +1504,7 @@ variable "request_cache_evictions_change_notifications_critical" {
 variable "request_cache_evictions_change_aggregation_function" {
   description = "Aggregation function and group by for request_cache_evictions_change detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['cluster'])"
+  default     = ".mean(by=['node_name'])"
 }
 
 variable "request_cache_evictions_change_timeshift" {
