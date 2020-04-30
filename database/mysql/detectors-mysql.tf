@@ -18,11 +18,11 @@ resource "signalfx_detector" "heartbeat" {
 }
 
 resource "signalfx_detector" "mysql_slow" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Mysql slow queries"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Mysql slow queries rate"
 
 	program_text = <<-EOF
 		A = data('mysql_slow_queries', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_slow_aggregation_function}
-		B = data('cache_size.qcache', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_slow_aggregation_function}
+		B = data('threads.running', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_slow_aggregation_function}
 		signal = (A/B).scale(100).${var.mysql_slow_transformation_function}(over='${var.mysql_slow_transformation_window}')
 		detect(when(signal > ${var.mysql_slow_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.mysql_slow_threshold_warning}) and when(signal <= ${var.mysql_slow_threshold_critical})).publish('WARN')
