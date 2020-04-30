@@ -3,8 +3,8 @@ resource "signalfx_detector" "heartbeat" {
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
-		signal = data('RequestCount', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})
-		not_reporting.detector(stream=signal, resource_identifier=['host'], duration='${var.heartbeat_timeframe}').publish('CRIT')
+		signal = data('bytes.used_memory', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})
+		not_reporting.detector(stream=signal, resource_identifier=['plugin_instance'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
 	rule {
@@ -27,7 +27,7 @@ resource "signalfx_detector" "evicted_keys" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.evicted_keys_threshold_critical}"
+		description           = "are too high > ${var.evicted_keys_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.evicted_keys_disabled_critical, var.evicted_keys_disabled, var.detectors_disabled)
@@ -36,7 +36,7 @@ resource "signalfx_detector" "evicted_keys" {
 	}
 
 	rule {
-		description           = "is too high > ${var.evicted_keys_threshold_warning}"
+		description           = "are too high > ${var.evicted_keys_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.evicted_keys_disabled_warning, var.evicted_keys_disabled, var.detectors_disabled)
@@ -55,7 +55,7 @@ resource "signalfx_detector" "expirations" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.expirations_threshold_critical}"
+		description           = "are too high > ${var.expirations_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.expirations_disabled_critical, var.expirations_disabled, var.detectors_disabled)
@@ -64,7 +64,7 @@ resource "signalfx_detector" "expirations" {
 	}
 
 	rule {
-		description           = "is too high > ${var.expirations_threshold_warning}"
+		description           = "are too high > ${var.expirations_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.expirations_disabled_warning, var.expirations_disabled, var.detectors_disabled)
@@ -74,13 +74,14 @@ resource "signalfx_detector" "expirations" {
 }
 
 resource "signalfx_detector" "blocked_clients" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis blocked clients"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis blocked client rate"
 
 	program_text = <<-EOF
 		A = data('gauge.blocked_clients', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.blocked_clients_aggregation_function}
 		B = data('gauge.connected_clients', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.blocked_clients_aggregation_function}
 		signal = ((A/B)*100).${var.blocked_clients_transformation_function}(over='${var.blocked_clients_transformation_window}').publish('signal')
-		detect(when(signal > 30)).publish('CRIT')
+		detect(when(signal > ${var.blocked_clients_threshold_critical})).publish('CRIT')
+		detect(when(signal > ${var.blocked_clients_threshold_warning}) and when(signal <= ${var.blocked_clientss_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
@@ -92,19 +93,30 @@ resource "signalfx_detector" "blocked_clients" {
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
+	rule {
+		description           = "is too high > ${var.blocked_clients_threshold_warning}"
+		severity              = "Warning"
+		detect_label          = "WARN"
+		disabled              = coalesce(var.blocked_clients_disabled_warning, var.blocked_clients_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.blocked_clients_notifications_warning, var.blocked_clients_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
 }
 
 resource "signalfx_detector" "keyspace_full" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis keyspace"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis keyspace seems full"
 
 	program_text = <<-EOF
-		signal = data('gauge.db0_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.keyspace_full_aggregation_function}.delta().abs().${var.keyspace_full_transformation_function}(over='${var.keyspace_full_transformation_window}').publish('signal')
-		detect(when(signal > ${var.keyspace_full_threshold_critical})).publish('CRIT')
-		detect(when(signal > ${var.keyspace_full_threshold_warning}) and when(signal <= ${var.keyspace_full_threshold_critical})).publish('WARN')
+		A = data('gauge.db0_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.keyspace_full_aggregation_function}
+		B = (A).timeshift('${var.keyspace_full_timeshift')
+		signal = (A-C).abs().${var.keyspace_full_transformation_function}(over='${var.keyspace_full_transformation_window}').publish(label='signal')
+		detect(when(signal <= ${var.keyspace_full_threshold_critical})).publish('CRIT')
+		detect(when(signal < ${var.keyspace_full_threshold_warning}) and when(signal > ${var.keyspace_full_threshold_critical})).publish('WARN')
 	EOF
 
 	rule {
-		description           = "is too high > ${var.keyspace_full_threshold_critical}"
+		description           = " change <= ${var.keyspace_full_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.keyspace_full_disabled_critical, var.keyspace_full_disabled, var.detectors_disabled)
@@ -113,7 +125,7 @@ resource "signalfx_detector" "keyspace_full" {
 	}
 
 	rule {
-		description           = "is too high > ${var.keyspace_full_threshold_warning}"
+		description           = "change < {var.keyspace_full_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.keyspace_full_disabled_warning, var.keyspace_full_disabled, var.detectors_disabled)
@@ -153,7 +165,7 @@ rule {
 }
 
 resource "signalfx_detector" "memory_frag" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis memory fragmented"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Redis memory fragmented percentage "
 
 	program_text = <<-EOF
 		A = data('gauge.mem_fragmentation_ratio', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.memory_frag_aggregation_function}
@@ -191,7 +203,7 @@ resource "signalfx_detector" "rejected_connections" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.rejected_connections_threshold_critical}"
+		description           = "are too high > ${var.rejected_connections_threshold_critical}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.rejected_connections_disabled_critical, var.rejected_connections_disabled, var.detectors_disabled)
@@ -200,7 +212,7 @@ resource "signalfx_detector" "rejected_connections" {
 	}
 
 	rule {
-		description           = "is too high > ${var.rejected_connections_threshold_warning}"
+		description           = "are too high > ${var.rejected_connections_threshold_warning}"
 		severity              = "Warning"
 		detect_label          = "WARN"
 		disabled              = coalesce(var.rejected_connections_disabled_warning, var.rejected_connections_disabled, var.detectors_disabled)
