@@ -97,7 +97,7 @@ variable "searcher_warmup_time_notifications_critical" {
 variable "searcher_warmup_time_aggregation_function" {
   description = "Aggregation function and group by for searcher_warmup_time detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".min(by=['Instance'])"
+  default     = ".min(by=['instance'])"
 }
 
 variable "searcher_warmup_time_transformation_function" {
