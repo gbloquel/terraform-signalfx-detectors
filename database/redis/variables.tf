@@ -97,7 +97,7 @@ variable "evicted_keys_notifications_critical" {
 variable "evicted_keys_aggregation_function" {
   description = "Aggregation function and group by for evicted_keys detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "evicted_keys_transformation_function" {
@@ -165,7 +165,7 @@ variable "expirations_notifications_critical" {
 variable "expirations_aggregation_function" {
   description = "Aggregation function and group by for expirations detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "expirations_transformation_function" {
@@ -233,7 +233,7 @@ variable "blocked_clients_notifications_critical" {
 variable "blocked_clients_aggregation_function" {
   description = "Aggregation function and group by for blocked_clients detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".sum(by=['host'])"
+  default     = ""
 }
 
 variable "blocked_clients_transformation_function" {
@@ -252,6 +252,12 @@ variable "blocked_clients_threshold_critical" {
   description = "Critical threshold for blocked_clients detector"
   type        = number
   default     = 30
+}
+
+variable "blocked_clients_threshold_warning" {
+  description = "Warning threshold for blocked_clients detector"
+  type        = number
+  default     = 10
 }
 
 # Keyspace_full detectors
@@ -295,7 +301,7 @@ variable "keyspace_full_notifications_critical" {
 variable "keyspace_full_aggregation_function" {
   description = "Aggregation function and group by for keyspace_full detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "keyspace_full_transformation_function" {
@@ -306,6 +312,12 @@ variable "keyspace_full_transformation_function" {
 
 variable "keyspace_full_transformation_window" {
   description = "Transformation window for keyspace_full detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "5m"
+}
+
+variable "keyspace_full_timeshift" {
+  description = "Timeshift window for keyspace_full detector (i.e. 5m, 20m, 1h, 1d)"
   type        = string
   default     = "5m"
 }
@@ -363,7 +375,7 @@ variable "memory_used_notifications_critical" {
 variable "memory_used_aggregation_function" {
   description = "Aggregation function and group by for memory_used detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "memory_used_transformation_function" {
@@ -431,7 +443,7 @@ variable "memory_frag_notifications_critical" {
 variable "memory_frag_aggregation_function" {
   description = "Aggregation function and group by for memory_frag detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "memory_frag_transformation_function" {
@@ -499,7 +511,7 @@ variable "rejected_connections_notifications_critical" {
 variable "rejected_connections_aggregation_function" {
   description = "Aggregation function and group by for rejected_connections detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".mean(by=['host'])"
+  default     = ""
 }
 
 variable "rejected_connections_transformation_function" {
@@ -567,7 +579,7 @@ variable "hitrate_notifications_critical" {
 variable "hitrate_aggregation_function" {
   description = "Aggregation function and group by for hitrate detector (i.e. \".mean(by=['host'])\")"
   type        = string
-  default     = ".sum(by=['host'])"
+  default     = ""
 }
 
 variable "hitrate_transformation_function" {
