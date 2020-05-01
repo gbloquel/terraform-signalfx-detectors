@@ -56,6 +56,210 @@ variable "heartbeat_timeframe" {
   default     = "20m"
 }
 
+# Mysql_connection detectors
+
+variable "mysql_connections_disabled" {
+  description = "Disable all alerting rules for mysql_connection detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_connections_disabled_critical" {
+  description = "Disable critical alerting rule for mysql_connection detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_connections_disabled_warning" {
+  description = "Disable warning alerting rule for mysql_connection detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_connections_notifications" {
+  description = "Notification recipients list for every alerting rules of mysql_connection detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_connections_notifications_warning" {
+  description = "Notification recipients list for warning alerting rule of mysql_connection detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_connections_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of mysql_connection detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_connections_aggregation_function" {
+  description = "Aggregation function and group by for mysql_connection detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_connections_transformation_function" {
+  description = "Transformation function for mysql_connection detector (mean, min, max)"
+  type        = string
+  default     = "mean"
+}
+
+variable "mysql_connections_transformation_window" {
+  description = "Transformation window for mysql_connection detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "10m"
+}
+
+variable "mysql_connections_threshold_critical" {
+  description = "Critical threshold for mysql_connection detector"
+  type        = number
+  default     = 80
+}
+
+variable "mysql_connections_threshold_warning" {
+  description = "Warning threshold for mysql_connection detector"
+  type        = number
+  default     = 70
+}
+
+# Mysql_pool_efficiency detectors
+
+variable "mysql_pool_efficiency_disabled" {
+  description = "Disable all alerting rules for mysql_pool_efficiency detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_efficiency_disabled_critical" {
+  description = "Disable critical alerting rule for mysql_pool_efficiency detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_efficiency_disabled_warning" {
+  description = "Disable warning alerting rule for mysql_pool_efficiency detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_efficiency_notifications" {
+  description = "Notification recipients list for every alerting rules of mysql_pool_efficiency detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_efficiency_notifications_warning" {
+  description = "Notification recipients list for warning alerting rule of mysql_pool_efficiency detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_efficiency_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of mysql_pool_efficiency detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_efficiency_aggregation_function" {
+  description = "Aggregation function and group by for mysql_pool_efficiency detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_pool_efficiency_transformation_function" {
+  description = "Transformation function for mysql_pool_efficiency detector (mean, min, max)"
+  type        = string
+  default     = "min"
+}
+
+variable "mysql_pool_efficiency_transformation_window" {
+  description = "Transformation window for mysql_pool_efficiency detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "1h"
+}
+
+variable "mysql_pool_efficiency_threshold_critical" {
+  description = "Critical threshold for mysql_pool_efficiency detector"
+  type        = number
+  default     = 30
+}
+
+variable "mysql_pool_efficiency_threshold_warning" {
+  description = "Warning threshold for mysql_pool_efficiency detector"
+  type        = number
+  default     = 20
+}
+
+# Mysql_pool_utilization detectors
+
+variable "mysql_pool_utilization_disabled" {
+  description = "Disable all alerting rules for mysql_pool_utilization detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_utilization_disabled_critical" {
+  description = "Disable critical alerting rule for mysql_pool_utilization detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_utilization_disabled_warning" {
+  description = "Disable warning alerting rule for mysql_pool_utilization detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_pool_utilization_notifications" {
+  description = "Notification recipients list for every alerting rules of mysql_pool_utilization detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_utilization_notifications_warning" {
+  description = "Notification recipients list for warning alerting rule of mysql_pool_utilization detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_utilization_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of mysql_pool_utilization detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_pool_utilization_aggregation_function" {
+  description = "Aggregation function and group by for mysql_pool_utilization detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_pool_utilization_transformation_function" {
+  description = "Transformation function for mysql_pool_utilization detector (mean, min, max)"
+  type        = string
+  default     = "min"
+}
+
+variable "mysql_pool_utilization_transformation_window" {
+  description = "Transformation window for mysql_pool_utilization detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "1h"
+}
+
+variable "mysql_pool_utilization_threshold_critical" {
+  description = "Critical threshold for mysql_pool_utilization detector"
+  type        = number
+  default     = 95
+}
+
+variable "mysql_pool_utilization_threshold_warning" {
+  description = "Warning threshold for mysql_pool_utilization detector"
+  type        = number
+  default     = 80
+}
+
 # Mysql_slow detectors
 
 variable "mysql_slow_disabled" {
@@ -318,4 +522,116 @@ variable "mysql_questions_anomaly_orientation" {
   description = "Specifies whether detect fires when signal is above, below, or out-of-band (Options:  above, below, out_of_band)"
   type        = string
   default     = "above"
+}
+
+# Mysql_replication_lag detectors
+
+variable "mysql_replication_lag_disabled" {
+  description = "Disable all alerting rules for mysql_replication_lag detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_replication_lag_disabled_critical" {
+  description = "Disable critical alerting rule for mysql_replication_lag detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_replication_lag_disabled_warning" {
+  description = "Disable warning alerting rule for mysql_replication_lag detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_replication_lag_notifications" {
+  description = "Notification recipients list for every alerting rules of mysql_replication_lag detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_replication_lag_notifications_warning" {
+  description = "Notification recipients list for warning alerting rule of mysql_replication_lag detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_replication_lag_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of mysql_replication_lag detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_replication_lag_aggregation_function" {
+  description = "Aggregation function and group by for mysql_replication_lag detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_replication_lag_transformation_function" {
+  description = "Transformation function for mysql_replication_lag detector (mean, min, max)"
+  type        = string
+  default     = "min"
+}
+
+variable "mysql_replication_lag_transformation_window" {
+  description = "Transformation window for mysql_replication_lag detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "15m"
+}
+
+variable "mysql_replication_lag_threshold_critical" {
+  description = "Critical threshold for mysql_replication_lag detector"
+  type        = number
+  default     = 200
+}
+
+variable "mysql_replication_lag_threshold_warning" {
+  description = "Warning threshold for mysql_replication_lag detector"
+  type        = number
+  default     = 100
+}
+
+# Mysql_replication_status detectors
+
+variable "mysql_replication_status_disabled" {
+  description = "Disable all alerting rules for mysql_replication_status detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_replication_status_disabled_critical" {
+  description = "Disable critical alerting rule for mysql_replication_status detector"
+  type        = bool
+  default     = null
+}
+
+variable "mysql_replication_status_notifications" {
+  description = "Notification recipients list for every alerting rules of mysql_replication_status detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_replication_status_notifications_critical" {
+  description = "Notification recipients list for critical alerting rule of mysql_replication_status detector"
+  type        = list
+  default     = []
+}
+
+variable "mysql_replication_status_aggregation_function" {
+  description = "Aggregation function and group by for mysql_replication_status detector (i.e. \".mean(by=['host'])\")"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_replication_status_transformation_function" {
+  description = "Transformation function for mysql_replication_status detector (mean, min, max)"
+  type        = string
+  default     = "min"
+}
+
+variable "mysql_replication_status_transformation_window" {
+  description = "Transformation window for mysql_replication_status detector (i.e. 5m, 20m, 1h, 1d)"
+  type        = string
+  default     = "5m"
 }
