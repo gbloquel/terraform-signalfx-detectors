@@ -17,8 +17,38 @@ resource "signalfx_detector" "heartbeat" {
 	}
 }
 
+resource "signalfx_detector" "mysql_connections" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL connections used to max ratio "
+
+	program_text = <<-EOF
+		A = data('threads.connected', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_connections_aggregation_function}
+		B = data('total_threads.created', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_connections_aggregation_function}
+		signal = (A/B).scale(100).${var.mysql_connections_transformation_function}(over='${var.mysql_connections_transformation_window}')
+		detect(when(signal > ${var.mysql_connections_threshold_critical})).publish('CRIT')
+		detect(when(signal > ${var.mysql_connections_threshold_warning}) and when(signal <= ${var.mysql_connections_threshold_critical})).publish('WARN')
+	EOF
+
+	rule {
+		description           = "is too high > ${var.mysql_connections_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.mysql_connections_disabled_critical, var.mysql_connections_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_connections_notifications_critical, var.mysql_connections_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+	rule {
+		description           = "is too high > ${var.mysql_connections_threshold_warning}"
+		severity              = "Warning"
+		detect_label          = "WARN"
+		disabled              = coalesce(var.mysql_connections_disabled_warning, var.mysql_connections_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_connections_notifications_warning, var.mysql_connections_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+}
+
 resource "signalfx_detector" "mysql_slow" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Mysql slow queries rate"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL slow queries rate"
 
 	program_text = <<-EOF
 		A = data('mysql_slow_queries', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_slow_aggregation_function}
@@ -47,6 +77,67 @@ resource "signalfx_detector" "mysql_slow" {
 	}
 }
 
+resource "signalfx_detector" "mysql_pool_efficiency" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL Innodb buffer pool efficiency"
+
+	program_text = <<-EOF
+		A = data('counter.Innodb_buffer_pool_reads', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_efficiency_aggregation_function}
+		B = data('counter.Innodb_buffer_pool_read_requests', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_efficiency_aggregation_function}
+		signal = (A/B).scale(100).${var.mysql_pool_efficiency_transformation_function}(over='${var.mysql_pool_efficiency_transformation_window}')
+		detect(when(signal > ${var.mysql_pool_efficiency_threshold_critical})).publish('CRIT')
+		detect(when(signal > ${var.mysql_pool_efficiency_threshold_warning}) and when(signal <= ${var.mysql_pool_efficiency_threshold_critical})).publish('WARN')
+	EOF
+
+	rule {
+		description           = "is too high > ${var.mysql_pool_efficiency_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.mysql_pool_efficiency_disabled_critical, var.mysql_pool_efficiency_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_pool_efficiency_notifications_critical, var.mysql_pool_efficiency_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+	rule {
+		description           = "is too high > ${var.mysql_pool_efficiency_threshold_warning}"
+		severity              = "Warning"
+		detect_label          = "WARN"
+		disabled              = coalesce(var.mysql_pool_efficiency_disabled_warning, var.mysql_pool_efficiency_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_pool_efficiency_notifications_warning, var.mysql_pool_efficiency_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+}
+
+resource "signalfx_detector" "mysql_pool_utilization" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL Innodb buffer pool utilization"
+
+	program_text = <<-EOF
+		A = data('gauge.Innodb_buffer_pool_pages_free', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_utilization_aggregation_function}
+		B = data('gauge.Innodb_buffer_pool_pages_total', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_utilization_aggregation_function}
+		signal = ((B-A)/B*100)).${var.mysql_pool_utilization_transformation_function}(over='${var.mysql_pool_utilization_transformation_window}')
+		detect(when(signal > ${var.mysql_pool_utilization_threshold_critical})).publish('CRIT')
+		detect(when(signal > ${var.mysql_pool_utilization_threshold_warning}) and when(signal <= ${var.mysql_pool_utilization_threshold_critical})).publish('WARN')
+	EOF
+
+	rule {
+		description           = "is too high > ${var.mysql_pool_utilization_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.mysql_pool_utilization_disabled_critical, var.mysql_pool_utilization_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_pool_utilization_notifications_critical, var.mysql_pool_utilization_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+	rule {
+		description           = "is too high > ${var.mysql_pool_utilization_threshold_warning}"
+		severity              = "Warning"
+		detect_label          = "WARN"
+		disabled              = coalesce(var.mysql_pool_utilization_disabled_warning, var.mysql_pool_utilization_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_pool_utilization_notifications_warning, var.mysql_pool_utilization_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+}
+
+
 resource "signalfx_detector" "mysql_threads_anomaly" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL threads changed abnormally"
 
@@ -72,7 +163,7 @@ resource "signalfx_detector" "mysql_questions_anomaly" {
 
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
-		signal = data('mysql_handler.commit', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_questions_anomaly_aggregation_function}.${var.mysql_questions_anomaly_transformation_function}(over='${var.mysql_questions_anomaly_transformation_window}').publish('signal')
+		signal = data('mysql_commands.*', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom}).sum(by=['host'])${var.mysql_questions_anomaly_aggregation_function}.${var.mysql_questions_anomaly_transformation_function}(over='${var.mysql_questions_anomaly_transformation_window}').publish('signal')
 		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.mysql_questions_anomaly_window_to_compare}'), space_between_windows=duration('${var.mysql_questions_anomaly_space_between_windows}'), num_windows=${var.mysql_questions_anomaly_num_windows}, fire_growth_rate_threshold=${var.mysql_questions_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.mysql_questions_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=${var.mysql_questions_anomaly_discard_historical_outliers}, orientation='${var.mysql_questions_anomaly_orientation}').publish('CRIT')
 	EOF
 
@@ -85,4 +176,52 @@ resource "signalfx_detector" "mysql_questions_anomaly" {
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 
+}
+
+resource "signalfx_detector" "mysql_replication_lag" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL Innodb replication lag"
+
+	program_text = <<-EOF
+		signal = data('gauge.slave_lag', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_replication_lag_aggregation_function}.${var.mysql_replication_lag_transformation_function}(over='${var.mysql_replication_lag_transformation_window}').publish('signal')
+		detect(when(signal > ${var.mysql_replication_lag_threshold_critical})).publish('CRIT')
+		detect(when(signal > ${var.mysql_replication_lag_threshold_warning}) and when(signal <= ${var.mysql_replication_lag_threshold_critical})).publish('WARN')
+	EOF
+
+	rule {
+		description           = "is too high > ${var.mysql_replication_lag_threshold_critical}"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.mysql_replication_lag_disabled_critical, var.mysql_replication_lag_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_replication_lag_notifications_critical, var.mysql_replication_lag_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+
+	rule {
+		description           = "is too high > ${var.mysql_replication_lag_threshold_warning}"
+		severity              = "Warning"
+		detect_label          = "WARN"
+		disabled              = coalesce(var.mysql_replication_lag_disabled_warning, var.mysql_replication_lag_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_replication_lag_notifications_warning, var.mysql_replication_lag_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
+}
+
+resource "signalfx_detector" "mysql_replication_status" {
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL Replication Status has changed"
+
+	program_text = <<-EOF
+		A = data('gauge.slave_sql_running', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_replication_status_aggregation_function}
+		B = data('gauge.slave_sql_running', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_replication_status_aggregation_function}
+		signal = (A+B).${var.mysql_replication_status_transformation_function}(over='${var.mysql_replication_status_transformation_window}')
+		detect(when(signal < 2)).publish('CRIT')
+	EOF
+
+	rule {
+		description           = "is < 2"
+		severity              = "Critical"
+		detect_label          = "CRIT"
+		disabled              = coalesce(var.mysql_replication_status_disabled_critical, var.mysql_replication_status_disabled, var.detectors_disabled)
+		notifications         = coalescelist(var.mysql_replication_status_notifications_critical, var.mysql_preplication_status_notifications, var.notifications)
+		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
+	}
 }
