@@ -48,7 +48,7 @@ resource "signalfx_detector" "mysql_slow" {
 }
 
 resource "signalfx_detector" "mysql_threads_anomaly" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Mysql threads changed abnormally"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL threads changed abnormally"
 
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
@@ -57,7 +57,7 @@ resource "signalfx_detector" "mysql_threads_anomaly" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.mysql_threads_anomaly_threshold_critical}"
+		description           = " rate > ${var.mysql_threads_anomaly_fire_growth_rate_threshold}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.mysql_threads_anomaly_disabled_critical, var.mysql_threads_anomaly_disabled, var.detectors_disabled)
@@ -68,7 +68,7 @@ resource "signalfx_detector" "mysql_threads_anomaly" {
 }
 
 resource "signalfx_detector" "mysql_questions_anomaly" {
-	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch number of open HTTP connection anomaly"
+	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MySQL queries changed abnomally"
 
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
@@ -77,7 +77,7 @@ resource "signalfx_detector" "mysql_questions_anomaly" {
 	EOF
 
 	rule {
-		description           = "is too high > ${var.mysql_questions_anomaly_threshold_critical}"
+		description           = " rate > ${var.mysql_questions_anomaly_fire_growth_rate_threshold}"
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.mysql_questions_anomaly_disabled_critical, var.mysql_questions_anomaly_disabled, var.detectors_disabled)
