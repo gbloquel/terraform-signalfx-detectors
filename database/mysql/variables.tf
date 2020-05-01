@@ -222,12 +222,6 @@ variable "mysql_threads_anomaly_orientation" {
   default     = "above"
 }
 
-variable "mysql_threads_anomaly_threshold_critical" {
-  description = "Critical threshold for mysql_threads_anomaly detector"
-  type        = number
-  default     = 1
-}
-
 # Mysql_questions_anomaly detectors
 
 variable "mysql_questions_anomaly_disabled" {
@@ -324,10 +318,4 @@ variable "mysql_questions_anomaly_orientation" {
   description = "Specifies whether detect fires when signal is above, below, or out-of-band (Options:  above, below, out_of_band)"
   type        = string
   default     = "above"
-}
-
-variable "mysql_questions_anomaly_threshold_critical" {
-  description = "Critical threshold for mysql_questions_anomaly detector"
-  type        = number
-  default     = 1
 }
