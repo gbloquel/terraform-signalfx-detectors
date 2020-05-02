@@ -163,8 +163,7 @@ variable "cluster_initializing_shards_notifications_critical" {
 }
 
 variable "cluster_initializing_shards_aggregation_function" {
-  description = "
-regation function and group by for cluster_initializing_shards detector (i.e. \".mean(by=['host'])\")"
+  description = "Aggregation function and group by for cluster_initializing_shards detector (i.e. \".mean(by=['host'])\")"
   type        = string
   default     = ".mean(by=['cluster'])"
 }
@@ -613,6 +612,12 @@ variable "jvm_gc_old_collection_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "jvm_gc_old_collection_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Jvm_gc_young_collection_latency detectors
 
 variable "jvm_gc_young_collection_latency_disabled" {
@@ -691,6 +696,12 @@ variable "jvm_gc_young_collection_latency_aperiodic_percentage" {
   description = "Percentage for the jvm_gc_young_collection_latency block"
   type        = number
   default     = 0.9
+}
+
+variable "jvm_gc_young_collection_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Indexing_latency detectors
@@ -773,6 +784,12 @@ variable "indexing_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "indexing_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Flush_latency detectors
 
 variable "flush_latency_disabled" {
@@ -851,6 +868,12 @@ variable "flush_latency_aperiodic_percentage" {
   description = "Percentage for the flush_latency block"
   type        = number
   default     = 0.9
+}
+
+variable "flush_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Http_connections_anomaly detectors
@@ -1037,6 +1060,12 @@ variable "search_query_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "search_query_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Fetch_latency detectors
 
 variable "fetch_latency_disabled" {
@@ -1115,6 +1144,12 @@ variable "fetch_latency_aperiodic_percentage" {
   description = "Percentage for the fetch_latency block"
   type        = number
   default     = 0.9
+}
+
+variable "fetch_latency_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Search_query_change detectors
@@ -1204,6 +1239,12 @@ variable "search_query_change_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "search_query_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Fetch_change detectors
 
 variable "fetch_change_disabled" {
@@ -1288,6 +1329,12 @@ variable "fetch_change_aperiodic_percentage" {
   description = "Percentage for the fetch_change block"
   type        = number
   default     = 0.9
+}
+
+variable "fetch_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Field_data_evictions_change detectors
@@ -1377,6 +1424,12 @@ variable "field_data_evictions_change_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "field_data_evictions_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Query_cache_evictions_change detectors
 
 variable "query_cache_evictions_change_disabled" {
@@ -1461,6 +1514,12 @@ variable "query_cache_evictions_change_aperiodic_percentage" {
   description = "Percentage for the query_cache_evictions_change block"
   type        = number
   default     = 0.9
+}
+
+variable "query_cache_evictions_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Request_cache_evictions_change detectors
@@ -1549,6 +1608,12 @@ variable "request_cache_evictions_change_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "request_cache_evictions_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Task_time_in_queue_change detectors
 
 variable "task_time_in_queue_change_disabled" {
@@ -1633,4 +1698,10 @@ variable "task_time_in_queue_change_aperiodic_percentage" {
   description = "Percentage for the task_time_in_queue_change block"
   type        = number
   default     = 0.9
+}
+
+variable "task_time_in_queue_change_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
