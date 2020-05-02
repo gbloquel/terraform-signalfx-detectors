@@ -615,7 +615,7 @@ variable "jvm_gc_old_collection_latency_aperiodic_percentage" {
 variable "jvm_gc_old_collection_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Jvm_gc_young_collection_latency detectors
@@ -701,7 +701,7 @@ variable "jvm_gc_young_collection_latency_aperiodic_percentage" {
 variable "jvm_gc_young_collection_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Indexing_latency detectors
@@ -787,7 +787,7 @@ variable "indexing_latency_aperiodic_percentage" {
 variable "indexing_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Flush_latency detectors
@@ -873,7 +873,7 @@ variable "flush_latency_aperiodic_percentage" {
 variable "flush_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Http_connections_anomaly detectors
@@ -1063,7 +1063,7 @@ variable "search_query_latency_aperiodic_percentage" {
 variable "search_query_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Fetch_latency detectors
@@ -1149,7 +1149,7 @@ variable "fetch_latency_aperiodic_percentage" {
 variable "fetch_latency_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Search_query_change detectors
@@ -1242,7 +1242,7 @@ variable "search_query_change_aperiodic_percentage" {
 variable "search_query_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Fetch_change detectors
@@ -1334,7 +1334,7 @@ variable "fetch_change_aperiodic_percentage" {
 variable "fetch_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Field_data_evictions_change detectors
@@ -1427,7 +1427,7 @@ variable "field_data_evictions_change_aperiodic_percentage" {
 variable "field_data_evictions_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Query_cache_evictions_change detectors
@@ -1519,7 +1519,7 @@ variable "query_cache_evictions_change_aperiodic_percentage" {
 variable "query_cache_evictions_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Request_cache_evictions_change detectors
@@ -1611,7 +1611,7 @@ variable "request_cache_evictions_change_aperiodic_percentage" {
 variable "request_cache_evictions_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
 
 # Task_time_in_queue_change detectors
@@ -1703,5 +1703,5 @@ variable "task_time_in_queue_change_aperiodic_percentage" {
 variable "task_time_in_queue_change_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = "0"
+  default     = false
 }
