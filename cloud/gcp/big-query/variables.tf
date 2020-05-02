@@ -136,6 +136,12 @@ variable "concurrent_queries_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "concurrent_queries_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Execution_time detectors
 
 variable "execution_time_disabled" {
@@ -169,8 +175,7 @@ variable "execution_time_notifications_warning" {
 }
 
 variable "execution_time_notifications_critical" {
-  description = "Notification recipients list for 
-critical alerting rule of execution_time detector"
+  description = "Notification recipients list for critical alerting rule of execution_time detector"
   type        = list
   default     = []
 }
@@ -215,6 +220,12 @@ variable "execution_time_aperiodic_percentage" {
   description = "Percentage for the execution_time block"
   type        = number
   default     = 0.9
+}
+
+variable "execution_time_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Scanned_bytes detectors
@@ -297,6 +308,12 @@ variable "scanned_bytes_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "scanned_bytes_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Scanned_bytes_billed detectors
 
 variable "scanned_bytes_billed_disabled" {
@@ -375,6 +392,12 @@ variable "scanned_bytes_billed_aperiodic_percentage" {
   description = "Percentage for the scanned_bytes_billed block"
   type        = number
   default     = 0.9
+}
+
+variable "scanned_bytes_billed_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # Available_slots detectors
@@ -457,6 +480,12 @@ variable "available_slots_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "available_slots_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # Stored_bytes detectors
 
 variable "stored_bytes_disabled" {
@@ -535,6 +564,12 @@ variable "stored_bytes_aperiodic_percentage" {
   description = "Percentage for the stored_bytes block"
   type        = number
   default     = 0.9
+}
+
+variable "stored_bytes_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
 
 # table_count detectors
@@ -617,6 +652,12 @@ variable "table_count_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "table_count_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # uploaded_bytes detectors
 
 variable "uploaded_bytes_disabled" {
@@ -697,6 +738,12 @@ variable "uploaded_bytes_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "uploaded_bytes_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
+}
+
 # uploaded_bytes_billed detectors
 
 variable "uploaded_bytes_billed_disabled" {
@@ -775,4 +822,10 @@ variable "uploaded_bytes_billed_aperiodic_percentage" {
   description = "Percentage for the uploaded_bytes_billed block"
   type        = number
   default     = 0.9
+}
+
+variable "uploaded_bytes_billed_aperiodic_upper_strict" {
+  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+  type        = bool
+  default     = "0"
 }
