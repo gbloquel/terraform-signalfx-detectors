@@ -137,9 +137,9 @@ variable "sending_operations_aperiodic_percentage" {
 }
 
 variable "sending_operations_aperiodic_upper_strict" {
-  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+    description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = false
+  default     = False
 }
 
 # Unavailable_sending_operations detectors
@@ -223,9 +223,9 @@ variable "unavailable_sending_operations_aperiodic_percentage" {
 }
 
 variable "unavailable_sending_operations_aperiodic_upper_strict" {
-  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
+    description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = false
+  default     = False
 }
 
 # Unavailable_sending_operations_ratio detectors
@@ -311,5 +311,5 @@ variable "unavailable_sending_operations_ratio_aperiodic_percentage" {
 variable "unavailable_sending_operations_ratio_aperiodic_upper_strict" {
   description = "If True, compare stream against upper with strict inequality; if False, non-strict"
   type        = bool
-  default     = false
+  default     = False
 }
