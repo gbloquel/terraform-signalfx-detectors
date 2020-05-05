@@ -284,12 +284,6 @@ variable "backend_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
-variable "backend_latency_aperiodic_upper_strict" {
-  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
-  type        = bool
-  default     = False
-}
-
 # Backend_latency_bucket detectors
 
 variable "backend_latency_bucket_disabled" {
@@ -370,12 +364,6 @@ variable "backend_latency_bucket_aperiodic_percentage" {
   default     = 0.9
 }
 
-variable "backend_latency_bucket_aperiodic_upper_strict" {
-  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
-  type        = bool
-  default     = False
-}
-
 # Request_count detectors
 
 variable "request_count_disabled" {
@@ -454,10 +442,4 @@ variable "request_count_aperiodic_percentage" {
   description = "Percentage for the request_count block"
   type        = number
   default     = 0.9
-}
-
-variable "request_count_aperiodic_upper_strict" {
-  description = "If True, compare stream against upper with strict inequality; if False, non-strict"
-  type        = bool
-  default     = False
 }
