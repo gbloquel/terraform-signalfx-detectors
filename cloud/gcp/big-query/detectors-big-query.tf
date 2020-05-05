@@ -24,7 +24,7 @@ resource "signalfx_detector" "concurrent_queries" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('query/count' and ${module.filter-tags.filter_custom})${var.concurrent_queries_aggregation_function}.${var.concurrent_queries_transformation_function}(over='${var.concurrent_queries_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.concurrent_queries_threshold_critical}, 'above', lasting('${var.concurrent_queries_aperiodic_duration}', ${var.concurrent_queries_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.concurrent_queries_threshold_warning}, ${var.concurrent_queries_threshold_critical}, 'within_range', lasting('${var.concurrent_queries_aperiodic_duration}', ${var.concurrent_queries_aperiodic_percentage}), upper_strict=${var.concurrent_queries_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.concurrent_queries_threshold_warning}, ${var.concurrent_queries_threshold_critical}, 'within_range', lasting('${var.concurrent_queries_aperiodic_duration}', ${var.concurrent_queries_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -54,7 +54,7 @@ resource "signalfx_detector" "execution_time" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('query/execution_times' and ${module.filter-tags.filter_custom})${var.execution_time_aggregation_function}.${var.execution_time_transformation_function}(over='${var.execution_time_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.execution_time_threshold_critical}, 'above', lasting('${var.execution_time_aperiodic_duration}', ${var.execution_time_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.execution_time_threshold_warning}, ${var.execution_time_threshold_critical}, 'within_range', lasting('${var.execution_time_aperiodic_duration}', ${var.execution_time_aperiodic_percentage}), upper_strict=${var.execution_time_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.execution_time_threshold_warning}, ${var.execution_time_threshold_critical}, 'within_range', lasting('${var.execution_time_aperiodic_duration}', ${var.execution_time_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -84,7 +84,7 @@ resource "signalfx_detector" "scanned_bytes" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('query/scanned_bytes' and ${module.filter-tags.filter_custom})${var.scanned_bytes_aggregation_function}.${var.scanned_bytes_transformation_function}(over='${var.scanned_bytes_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.scanned_bytes_threshold_critical}, 'above', lasting('${var.scanned_bytes_aperiodic_duration}', ${var.scanned_bytes_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.scanned_bytes_threshold_warning}, ${var.scanned_bytes_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_aperiodic_duration}', ${var.scanned_bytes_aperiodic_percentage}), upper_strict=${var.scanned_bytes_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.scanned_bytes_threshold_warning}, ${var.scanned_bytes_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_aperiodic_duration}', ${var.scanned_bytes_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -114,7 +114,7 @@ resource "signalfx_detector" "scanned_bytes_billed" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('query/scanned_bytes_billed' and ${module.filter-tags.filter_custom})${var.scanned_bytes_billed_aggregation_function}.${var.scanned_bytes_billed_transformation_function}(over='${var.scanned_bytes_billed_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.scanned_bytes_billed_threshold_critical}, 'above', lasting('${var.scanned_bytes_billed_aperiodic_duration}', ${var.scanned_bytes_billed_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.scanned_bytes_billed_threshold_warning}, ${var.scanned_bytes_billed_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_billed_aperiodic_duration}', ${var.scanned_bytes_billed_aperiodic_percentage}), upper_strict=${var.scanned_bytes_billed_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.scanned_bytes_billed_threshold_warning}, ${var.scanned_bytes_billed_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_billed_aperiodic_duration}', ${var.scanned_bytes_billed_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -144,7 +144,7 @@ resource "signalfx_detector" "available_slots" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('slots/total_available' and ${module.filter-tags.filter_custom})${var.available_slots_aggregation_function}.${var.available_slots_transformation_function}(over='${var.available_slots_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.available_slots_threshold_critical}, 'below', lasting('${var.available_slots_aperiodic_duration}', ${var.available_slots_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.available_slots_threshold_warning}, ${var.available_slots_threshold_critical}, 'within_range', lasting('${var.available_slots_aperiodic_duration}', ${var.available_slots_aperiodic_percentage}), upper_strict=${var.available_slots_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.available_slots_threshold_warning}, ${var.available_slots_threshold_critical}, 'within_range', lasting('${var.available_slots_aperiodic_duration}', ${var.available_slots_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -174,7 +174,7 @@ resource "signalfx_detector" "stored_bytes" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('storage/stored_bytes' and ${module.filter-tags.filter_custom})${var.stored_bytes_aggregation_function}.${var.stored_bytes_transformation_function}(over='${var.stored_bytes_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.stored_bytes_threshold_critical}, 'above', lasting('${var.stored_bytes_aperiodic_duration}', ${var.stored_bytes_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.stored_bytes_threshold_warning}, ${var.stored_bytes_threshold_critical}, 'within_range', lasting('${var.stored_bytes_aperiodic_duration}', ${var.stored_bytes_aperiodic_percentage}), upper_strict=${var.stored_bytes_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.stored_bytes_threshold_warning}, ${var.stored_bytes_threshold_critical}, 'within_range', lasting('${var.stored_bytes_aperiodic_duration}', ${var.stored_bytes_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -204,7 +204,7 @@ resource "signalfx_detector" "table_count" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('storage/table_count' and ${module.filter-tags.filter_custom})${var.table_count_aggregation_function}.${var.table_count_transformation_function}(over='${var.table_count_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.table_count_threshold_critical}, 'above', lasting('${var.table_count_aperiodic_duration}', ${var.table_count_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.table_count_threshold_warning}, ${var.table_count_threshold_critical}, 'within_range', lasting('${var.table_count_aperiodic_duration}', ${var.table_count_aperiodic_percentage}), upper_strict=${var.table_count_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.table_count_threshold_warning}, ${var.table_count_threshold_critical}, 'within_range', lasting('${var.table_count_aperiodic_duration}', ${var.table_count_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -234,7 +234,7 @@ resource "signalfx_detector" "uploaded_bytes" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('storage/uploaded_bytes' and ${module.filter-tags.filter_custom})${var.uploaded_bytes_aggregation_function}.${var.uploaded_bytes_transformation_function}(over='${var.uploaded_bytes_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.uploaded_bytes_threshold_critical}, 'above', lasting('${var.uploaded_bytes_aperiodic_duration}', ${var.uploaded_bytes_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.uploaded_bytes_threshold_warning}, ${var.uploaded_bytes_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_aperiodic_duration}', ${var.uploaded_bytes_aperiodic_percentage}), upper_strict=${var.uploaded_bytes_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.uploaded_bytes_threshold_warning}, ${var.uploaded_bytes_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_aperiodic_duration}', ${var.uploaded_bytes_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -264,7 +264,7 @@ resource "signalfx_detector" "uploaded_bytes_billed" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('storage/uploaded_bytes_billed' and ${module.filter-tags.filter_custom})${var.uploaded_bytes_billed_aggregation_function}.${var.uploaded_bytes_billed_transformation_function}(over='${var.uploaded_bytes_billed_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.uploaded_bytes_billed_threshold_critical}, 'above', lasting('${var.uploaded_bytes_billed_aperiodic_duration}', ${var.uploaded_bytes_billed_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.uploaded_bytes_billed_threshold_warning}, ${var.uploaded_bytes_billed_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_billed_aperiodic_duration}', ${var.uploaded_bytes_billed_aperiodic_percentage}), upper_strict=${var.uploaded_bytes_billed_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.uploaded_bytes_billed_threshold_warning}, ${var.uploaded_bytes_billed_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_billed_aperiodic_duration}', ${var.uploaded_bytes_billed_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
