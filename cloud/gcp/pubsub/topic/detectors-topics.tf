@@ -5,7 +5,7 @@ resource "signalfx_detector" "sending_operations" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('topic/send_message_operation_count', filter=filter('monitored_resource', 'pubsub_topic') and ${module.filter-tags.filter_custom})${var.sending_operations_aggregation_function}.${var.sending_operations_transformation_function}(over='${var.sending_operations_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.sending_operations_threshold_critical}, 'below', lasting('${var.sending_operations_aperiodic_duration}', ${var.sending_operations_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector_with_clear(signal, ${var.sending_operations_threshold_warning}, ${var.sending_operations_threshold_critical}, 'within_range', lasting('${var.sending_operations_aperiodic_duration}', ${var.sending_operations_aperiodic_percentage}), upper_strict=${var.sending_operations_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.sending_operations_threshold_warning}, ${var.sending_operations_threshold_critical}, 'within_range', lasting('${var.sending_operations_aperiodic_duration}', ${var.sending_operations_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -35,7 +35,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 		from signalfx.detectors.aperiodic import aperiodic
 		signal = data('topic/send_message_operation_count', filter=filter('monitored_resource', 'pubsub_topic') and filter('response_code', 'unavailable') and ${module.filter-tags.filter_custom})${var.unavailable_sending_operations_aggregation_function}.${var.unavailable_sending_operations_transformation_function}(over='${var.unavailable_sending_operations_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.unavailable_sending_operations_threshold_critical}, 'above', lasting('${var.unavailable_sending_operations_aperiodic_duration}', ${var.unavailable_sending_operations_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector_with_clear(signal, ${var.unavailable_sending_operations_threshold_warning}, ${var.unavailable_sending_operations_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_aperiodic_duration}', ${var.unavailable_sending_operations_aperiodic_percentage}), upper_strict=${var.unavailable_sending_operations_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.unavailable_sending_operations_threshold_warning}, ${var.unavailable_sending_operations_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_aperiodic_duration}', ${var.unavailable_sending_operations_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -67,7 +67,7 @@ resource "signalfx_detector" "unavailable_sending_operations_ratio" {
 		B = data('topic/send_message_operation_count', filter=filter('monitored_resource', 'pubsub_topic') and ${module.filter-tags.filter_custom})${var.unavailable_sending_operations_ratio_aggregation_function}
 		signal = ((100*A)/B).${var.unavailable_sending_operations_ratio_transformation_function}(over='${var.unavailable_sending_operations_ratio_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.unavailable_sending_operations_ratio_threshold_critical}, 'above', lasting('${var.unavailable_sending_operations_ratio_aperiodic_duration}', ${var.unavailable_sending_operations_ratio_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector_with_clear(signal, ${var.unavailable_sending_operations_ratio_threshold_warning}, ${var.unavailable_sending_operations_ratio_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_ratio_aperiodic_duration}', ${var.unavailable_sending_operations_ratio_aperiodic_percentage}), upper_strict=${var.unavailable_sending_operations_ratio_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.unavailable_sending_operations_ratio_threshold_warning}, ${var.unavailable_sending_operations_ratio_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_ratio_aperiodic_duration}', ${var.unavailable_sending_operations_ratio_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
