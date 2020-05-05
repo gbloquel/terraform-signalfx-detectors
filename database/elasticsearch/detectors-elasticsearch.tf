@@ -233,7 +233,7 @@ resource "signalfx_detector" "jvm_gc_old_collection_latency" {
 		B = data('elasticsearch.jvm.gc.count', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.jvm_gc_old_collection_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.jvm_gc_old_collection_latency_transformation_function}(over='${var.jvm_gc_old_collection_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.jvm_gc_old_collection_latency_threshold_critical}, 'above', lasting('${var.jvm_gc_old_collection_latency_aperiodic_duration}', ${var.jvm_gc_old_collection_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.jvm_gc_old_collection_latency_threshold_warning}, ${var.jvm_gc_old_collection_latency_threshold_critical}, 'within_range', lasting('${var.jvm_gc_old_collection_latency_aperiodic_duration}', ${var.jvm_gc_old_collection_latency_aperiodic_percentage}), upper_strict=${var.jvm_gc_old_collection_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.jvm_gc_old_collection_latency_threshold_warning}, ${var.jvm_gc_old_collection_latency_threshold_critical}, 'within_range', lasting('${var.jvm_gc_old_collection_latency_aperiodic_duration}', ${var.jvm_gc_old_collection_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -265,7 +265,7 @@ resource "signalfx_detector" "jvm_gc_young_collection_latency" {
 		B = data('elasticsearch.jvm.gc.count', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.jvm_gc_young_collection_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.jvm_gc_young_collection_latency_transformation_function}(over='${var.jvm_gc_young_collection_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.jvm_gc_young_collection_latency_threshold_critical}, 'above', lasting('${var.jvm_gc_young_collection_latency_aperiodic_duration}', ${var.jvm_gc_young_collection_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.jvm_gc_young_collection_latency_threshold_warning}, ${var.jvm_gc_young_collection_latency_threshold_critical}, 'within_range', lasting('${var.jvm_gc_young_collection_latency_aperiodic_duration}', ${var.jvm_gc_young_collection_latency_aperiodic_percentage}), upper_strict=${var.jvm_gc_young_collection_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.jvm_gc_young_collection_latency_threshold_warning}, ${var.jvm_gc_young_collection_latency_threshold_critical}, 'within_range', lasting('${var.jvm_gc_young_collection_latency_aperiodic_duration}', ${var.jvm_gc_young_collection_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -297,7 +297,7 @@ resource "signalfx_detector" "indexing_latency" {
 		B = data('elasticsearch.indices.indexing.index-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.indexing_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.indexing_latency_transformation_function}(over='${var.indexing_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.indexing_latency_threshold_critical}, 'above', lasting('${var.indexing_latency_aperiodic_duration}', ${var.indexing_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.indexing_latency_threshold_warning}, ${var.indexing_latency_threshold_critical}, 'within_range', lasting('${var.indexing_latency_aperiodic_duration}', ${var.indexing_latency_aperiodic_percentage}), upper_strict=${var.indexing_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.indexing_latency_threshold_warning}, ${var.indexing_latency_threshold_critical}, 'within_range', lasting('${var.indexing_latency_aperiodic_duration}', ${var.indexing_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -329,7 +329,7 @@ resource "signalfx_detector" "flush_latency" {
 		B = data('elasticsearch.indices.flush.total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.flush_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.flush_latency_transformation_function}(over='${var.flush_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.flush_latency_threshold_critical}, 'above', lasting('${var.flush_latency_aperiodic_duration}', ${var.flush_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.flush_latency_threshold_warning}, ${var.flush_latency_threshold_critical}, 'within_range', lasting('${var.flush_latency_aperiodic_duration}', ${var.flush_latency_aperiodic_percentage}), upper_strict=${var.flush_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.flush_latency_threshold_warning}, ${var.flush_latency_threshold_critical}, 'within_range', lasting('${var.flush_latency_aperiodic_duration}', ${var.flush_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -381,7 +381,7 @@ resource "signalfx_detector" "search_query_latency" {
 		B = data('elasticsearch.indices.search.query-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.search_query_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.search_query_latency_transformation_function}(over='${var.search_query_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.search_query_latency_threshold_critical}, 'above', lasting('${var.search_query_latency_aperiodic_duration}', ${var.search_query_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.search_query_latency_threshold_warning}, ${var.search_query_latency_threshold_critical}, 'within_range', lasting('${var.search_query_latency_aperiodic_duration}', ${var.search_query_latency_aperiodic_percentage}), upper_strict=${var.search_query_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.search_query_latency_threshold_warning}, ${var.search_query_latency_threshold_critical}, 'within_range', lasting('${var.search_query_latency_aperiodic_duration}', ${var.search_query_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
@@ -411,7 +411,7 @@ resource "signalfx_detector" "fetch_latency" {
 		B = data('elasticsearch.indices.search.fetch-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.fetch_latency_transformation_function}(over='${var.fetch_latency_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.fetch_latency_threshold_critical}, 'above', lasting('${var.fetch_latency_aperiodic_duration}', ${var.fetch_latency_aperiodic_percentage})).publish('CRIT')
-		aperiodic.range_detector(signal, ${var.fetch_latency_threshold_warning}, ${var.fetch_latency_threshold_critical}, 'within_range', lasting('${var.fetch_latency_aperiodic_duration}', ${var.fetch_latency_aperiodic_percentage}), upper_strict=${var.fetch_latency_aperiodic_upper_strict}).publish('WARN')
+		aperiodic.range_detector(signal, ${var.fetch_latency_threshold_warning}, ${var.fetch_latency_threshold_critical}, 'within_range', lasting('${var.fetch_latency_aperiodic_duration}', ${var.fetch_latency_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
 
 	rule {
