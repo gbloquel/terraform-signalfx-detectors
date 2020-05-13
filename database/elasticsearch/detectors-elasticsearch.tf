@@ -137,7 +137,7 @@ resource "signalfx_detector" "jvm_heap_memory_usage" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch JVM heap memory usage"
 
 	program_text = <<-EOF
-		signal = data('elasticsearch.jvm.mem.heap-used', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}){var.jvm_heap_memory_usage_aggregation_function}.${var.jvm_heap_memory_usage_transformation_function}(over='${var.jvm_heap_memory_usage_transformation_window}').publish('signal')
+		signal = data('elasticsearch.jvm.mem.heap-used', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.jvm_heap_memory_usage_aggregation_function}.${var.jvm_heap_memory_usage_transformation_function}(over='${var.jvm_heap_memory_usage_transformation_window}').publish('signal')
 		detect(when(signal > ${var.jvm_heap_memory_usage_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.jvm_heap_memory_usage_threshold_warning}) and when(signal <= ${var.jvm_heap_memory_usage_threshold_critical})).publish('WARN')
 	EOF
@@ -358,7 +358,7 @@ resource "signalfx_detector" "http_connections_anomaly" {
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
 		signal = data('elasticsearch.http.current_open', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.http_connections_anomaly_aggregation_function}.${var.http_connections_anomaly_transformation_function}(over='${var.http_connections_anomaly_transformation_window}').publish('signal')
-		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.http_connections_anomaly_window_to_compare}'), space_between_windows=duration('${var.http_connections_anomaly_space_between_windows}'), num_windows=${var.http_connections_anomaly_num_windows}, fire_growth_rate_threshold=${var.http_connections_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.http_connections_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=${var.http_connections_anomaly_discard_historical_outliers}, orientation='${var.http_connections_anomaly_orientation}').publish('CRIT')
+		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.http_connections_anomaly_window_to_compare}'), space_between_windows=duration('${var.http_connections_anomaly_space_between_windows}'), num_windows=${var.http_connections_anomaly_num_windows}, fire_growth_rate_threshold=${var.http_connections_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.http_connections_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=True, orientation='${var.http_connections_anomaly_orientation}').publish('CRIT')
 	EOF
 
 	rule {
@@ -407,6 +407,7 @@ resource "signalfx_detector" "fetch_latency" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch search fetch latency"
 
 	program_text = <<-EOF
+		from signalfx.detectors.aperiodic import aperiodic
 		A = data('elasticsearch.indices.search.fetch-time', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
 		B = data('elasticsearch.indices.search.fetch-total', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom}).delta()${var.fetch_latency_aggregation_function}
 		signal = (A/B).scale(1000).${var.fetch_latency_transformation_function}(over='${var.fetch_latency_transformation_window}').publish('signal')
@@ -468,7 +469,7 @@ resource "signalfx_detector" "fetch_change" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Elasticsearch fetches currently running percent change"
 
 	program_text = <<-EOF
-		A = data('elasticsearch.indices.search.fetch-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.fetch_change_aggregation_function})
+		A = data('elasticsearch.indices.search.fetch-current', filter=filter('plugin', 'elasticsearch') and ${module.filter-tags.filter_custom})${var.fetch_change_aggregation_function}
 		B = (A).timeshift('${var.fetch_change_timeshift}')
 		signal = ((B-A)/B*100).${var.fetch_change_transformation_function}(over='${var.fetch_change_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.fetch_change_threshold_critical})).publish('CRIT')
