@@ -221,7 +221,7 @@ resource "signalfx_detector" "mysql_replication_status" {
 		severity              = "Critical"
 		detect_label          = "CRIT"
 		disabled              = coalesce(var.mysql_replication_status_disabled_critical, var.mysql_replication_status_disabled, var.detectors_disabled)
-		notifications         = coalescelist(var.mysql_replication_status_notifications_critical, var.mysql_preplication_status_notifications, var.notifications)
+		notifications         = coalescelist(var.mysql_replication_status_notifications_critical, var.mysql_replication_status_notifications, var.notifications)
 		parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
 	}
 }
