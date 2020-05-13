@@ -110,7 +110,7 @@ resource "signalfx_detector" "keyspace_full" {
 	program_text = <<-EOF
 		A = data('gauge.db0_keys', filter=filter('plugin', 'redis_info') and ${module.filter-tags.filter_custom})${var.keyspace_full_aggregation_function}
 		B = (A).timeshift('${var.keyspace_full_timeshift}')
-		signal = (A-C).abs().${var.keyspace_full_transformation_function}(over='${var.keyspace_full_transformation_window}').publish(label='signal')
+		signal = (A-B).abs().${var.keyspace_full_transformation_function}(over='${var.keyspace_full_transformation_window}').publish(label='signal')
 		detect(when(signal <= ${var.keyspace_full_threshold_critical})).publish('CRIT')
 		detect(when(signal < ${var.keyspace_full_threshold_warning}) and when(signal > ${var.keyspace_full_threshold_critical})).publish('WARN')
 	EOF
