@@ -1,10 +1,10 @@
 resource "signalfx_detector" "heartbeat" {
- 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] New Relic application heartbeat"
+ 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] AWS ALB heartbeat"
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
-		signal = data('Agent/MetricsReported/count/requests_per_minute/*' and ${module.filter-tags.filter_custom})
-		not_reporting.detector(stream=signal, resource_identifier=['application'], duration='${var.heartbeat_timeframe}').publish('CRIT')
+		signal = data('Agent/MetricsReported/count/requests_per_minute/*', ${module.filter-tags.filter_custom})
+		not_reporting.detector(stream=signal, resource_identifier=['id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
 	rule {
@@ -21,7 +21,7 @@ resource "signalfx_detector" "app_error_rate" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] New Relic error rate"
 
 	program_text = <<-EOF
-		signal = data('Errors/all/errors_per_minute/*' and ${module.filter-tags.filter_custom})${var.app_error_rate_aggregation_function}.${var.app_error_rate_transformation_function}(over='${var.app_error_rate_transformation_window}')
+		signal = data('Errors/all/errors_per_minute/*', ${module.filter-tags.filter_custom})${var.app_error_rate_aggregation_function}.${var.app_error_rate_transformation_function}(over='${var.app_error_rate_transformation_window}')
 		detect(when(signal > ${var.app_error_rate_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.app_error_rate_threshold_warning}) and when(signal <= ${var.app_error_rate_threshold_critical})).publish('WARN')
 	EOF
@@ -50,7 +50,7 @@ resource "signalfx_detector" "app_apdex_score" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] New Relic apdex score ratio"
 
 	program_text = <<-EOF
-		signal = data('Apdex/score/*' and ${module.filter-tags.filter_custom})${var.app_apdex_score_aggregation_function}.${var.app_apdex_score_transformation_function}(over='${var.app_apdex_score_transformation_window}')
+		signal = data('Apdex/score/*', ${module.filter-tags.filter_custom})${var.app_apdex_score_aggregation_function}.${var.app_apdex_score_transformation_function}(over='${var.app_apdex_score_transformation_window}')
 		detect(when(signal < ${var.app_apdex_score_threshold_critical})).publish('CRIT')
 		detect(when(signal < ${var.app_apdex_score_threshold_warning}) and when(signal >= ${var.app_apdex_score_threshold_critical})).publish('WARN')
 	EOF
