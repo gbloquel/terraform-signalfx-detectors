@@ -3,7 +3,7 @@ resource "signalfx_detector" "heartbeat" {
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
-		signal = data('counter.solr.http_requests' and ${module.filter-tags.filter_custom})
+		signal = data('counter.solr.http_requests', ${module.filter-tags.filter_custom})
 		not_reporting.detector(stream=signal, resource_identifier=['node'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
@@ -21,7 +21,7 @@ resource "signalfx_detector" "searcher_warmup_time" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] Apache Solr searcher warmup time"
 
 	program_text = <<-EOF
-		signal = data('gauge.solr.searcher_warmup' and ${module.filter-tags.filter_custom})${var.searcher_warmup_time_aggregation_function}.${var.searcher_warmup_time_transformation_function}(over='${var.searcher_warmup_time_transformation_window}').publish('signal')
+		signal = data('gauge.solr.searcher_warmup', ${module.filter-tags.filter_custom})${var.searcher_warmup_time_aggregation_function}.${var.searcher_warmup_time_transformation_function}(over='${var.searcher_warmup_time_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.searcher_warmup_time_threshold_critical})).publish('CRIT')
 		detect(when(signal >= ${var.searcher_warmup_time_threshold_warning}) and when(signal <= ${var.searcher_warmup_time_threshold_critical})).publish('WARN')
 	EOF
