@@ -113,7 +113,7 @@ resource "signalfx_detector" "mysql_pool_utilization" {
 	program_text = <<-EOF
 		A = data('gauge.Innodb_buffer_pool_pages_free', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_utilization_aggregation_function}
 		B = data('gauge.Innodb_buffer_pool_pages_total', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_pool_utilization_aggregation_function}
-		signal = ((B-A)/B*100)).${var.mysql_pool_utilization_transformation_function}(over='${var.mysql_pool_utilization_transformation_window}')
+		signal = ((B-A)/B*100).${var.mysql_pool_utilization_transformation_function}(over='${var.mysql_pool_utilization_transformation_window}')
 		detect(when(signal > ${var.mysql_pool_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.mysql_pool_utilization_threshold_warning}) and when(signal <= ${var.mysql_pool_utilization_threshold_critical})).publish('WARN')
 	EOF
@@ -144,7 +144,7 @@ resource "signalfx_detector" "mysql_threads_anomaly" {
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
 		signal = data('threads.running', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom})${var.mysql_threads_anomaly_aggregation_function}.${var.mysql_threads_anomaly_transformation_function}(over='${var.mysql_threads_anomaly_transformation_window}').publish('signal')
-		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.mysql_threads_anomaly_window_to_compare}'), space_between_windows=duration('${var.mysql_threads_anomaly_space_between_windows}'), num_windows=${var.mysql_threads_anomaly_num_windows}, fire_growth_rate_threshold=${var.mysql_threads_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.mysql_threads_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=${var.mysql_threads_anomaly_discard_historical_outliers}, orientation='${var.mysql_threads_anomaly_orientation}').publish('CRIT')
+		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.mysql_threads_anomaly_window_to_compare}'), space_between_windows=duration('${var.mysql_threads_anomaly_space_between_windows}'), num_windows=${var.mysql_threads_anomaly_num_windows}, fire_growth_rate_threshold=${var.mysql_threads_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.mysql_threads_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=True, orientation='${var.mysql_threads_anomaly_orientation}').publish('CRIT')
 	EOF
 
 	rule {
@@ -164,7 +164,7 @@ resource "signalfx_detector" "mysql_questions_anomaly" {
 	program_text = <<-EOF
 		from signalfx.detectors.against_periods import against_periods
 		signal = data('mysql_commands.*', filter=filter('plugin', 'mysql') and ${module.filter-tags.filter_custom}).sum(by=['host'])${var.mysql_questions_anomaly_aggregation_function}.${var.mysql_questions_anomaly_transformation_function}(over='${var.mysql_questions_anomaly_transformation_window}').publish('signal')
-		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.mysql_questions_anomaly_window_to_compare}'), space_between_windows=duration('${var.mysql_questions_anomaly_space_between_windows}'), num_windows=${var.mysql_questions_anomaly_num_windows}, fire_growth_rate_threshold=${var.mysql_questions_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.mysql_questions_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=${var.mysql_questions_anomaly_discard_historical_outliers}, orientation='${var.mysql_questions_anomaly_orientation}').publish('CRIT')
+		against_periods.detector_growth_rate(signal, window_to_compare=duration('${var.mysql_questions_anomaly_window_to_compare}'), space_between_windows=duration('${var.mysql_questions_anomaly_space_between_windows}'), num_windows=${var.mysql_questions_anomaly_num_windows}, fire_growth_rate_threshold=${var.mysql_questions_anomaly_fire_growth_rate_threshold}, clear_growth_rate_threshold=${var.mysql_questions_anomaly_clear_growth_rate_threshold}, discard_historical_outliers=True, orientation='${var.mysql_questions_anomaly_orientation}').publish('CRIT')
 	EOF
 
 	rule {
