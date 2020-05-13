@@ -414,12 +414,6 @@ variable "mysql_threads_anomaly_clear_growth_rate_threshold" {
   default     = 0.1
 }
 
-variable "mysql_threads_anomaly_discard_historical_outliers" {
-  description = "Whether to take the median (True) or mean (False) of historical windows"
-  type        = bool
-  default     = "1"
-}
-
 variable "mysql_threads_anomaly_orientation" {
   description = "Specifies whether detect fires when signal is above, below, or out-of-band (Options:  above, below, out_of_band)"
   type        = string
@@ -510,12 +504,6 @@ variable "mysql_questions_anomaly_clear_growth_rate_threshold" {
   description = "Change over historical norm required to clear, should be >= 0"
   type        = number
   default     = 0.1
-}
-
-variable "mysql_questions_anomaly_discard_historical_outliers" {
-  description = "Whether to take the median (True) or mean (False) of historical windows"
-  type        = bool
-  default     = "1"
 }
 
 variable "mysql_questions_anomaly_orientation" {
