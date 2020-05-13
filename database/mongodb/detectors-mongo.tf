@@ -40,7 +40,7 @@ resource "signalfx_detector" "mongodb_secondary" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] MongoDB secondary is missing"
 
 	program_text = <<-EOF
-		A = data('gauge.repl.active_nodes', filter=filter('plugin', 'mongo') and ${module.filter-tags.filter_custom})).mean(by=['cluster'])${var.mongodb_secondary_aggregation_function}
+		A = data('gauge.repl.active_nodes', filter=filter('plugin', 'mongo') and ${module.filter-tags.filter_custom}).mean(by=['cluster'])${var.mongodb_secondary_aggregation_function}
 		B = data('gauge.repl.is_primary_node', filter=filter('plugin', 'mongo') and ${module.filter-tags.filter_custom})).sum(by=['cluster'])${var.mongodb_secondary_aggregation_function}
 		signal = (A-B).${var.mongodb_secondary_transformation_function}(over='${var.mongodb_secondary_transformation_window}').publish('signal')
 		detect(when(signal <= ${var.mongodb_secondary_threshold_critical})).publish('CRIT')
