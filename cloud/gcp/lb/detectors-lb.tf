@@ -121,7 +121,7 @@ resource "signalfx_detector" "request_count" {
 
 	program_text = <<-EOF
 		from signalfx.detectors.aperiodic import aperiodic
-		signal = data('https/request_count', filter=filter('service', 'loadbalancing') and ${module.filter-tags.filter_custom})${var.request_count_aggregation_function}).rateofchange().${var.request_count_transformation_function}(over='${var.request_count_transformation_window}').publish('signal')
+		signal = data('https/request_count', filter=filter('service', 'loadbalancing') and ${module.filter-tags.filter_custom})${var.request_count_aggregation_function}.rateofchange().${var.request_count_transformation_function}(over='${var.request_count_transformation_window}').publish('signal')
 		aperiodic.above_or_below_detector(signal, ${var.request_count_threshold_critical}, 'above', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage})).publish('CRIT')
 		aperiodic.range_detector(signal, ${var.request_count_threshold_warning}, ${var.request_count_threshold_critical}, 'within_range', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage}), upper_strict=False).publish('WARN')
 	EOF
