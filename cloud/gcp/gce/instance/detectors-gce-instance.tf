@@ -3,7 +3,7 @@ resource "signalfx_detector" "heartbeat" {
 
 	program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
-		signal = data('instance/cpu/usage_time' and ${module.filter-tags.filter_custom}).publish('signal')
+		signal = data('instance/cpu/usage_time', ${module.filter-tags.filter_custom}).publish('signal')
 		not_reporting.detector(stream=signal, resource_identifier=['instance_name'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
@@ -21,7 +21,7 @@ resource "signalfx_detector" "cpu_utilization" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine Instance CPU utilization"
 
 	program_text = <<-EOF
-		A = data('instance/cpu/utilization' and ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
+		A = data('instance/cpu/utilization', ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
 		signal = (A*100).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cpu_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.cpu_utilization_threshold_warning}) and when(signal <= ${var.cpu_utilization_threshold_critical})).publish('WARN')
@@ -50,10 +50,10 @@ resource "signalfx_detector" "disk_throttled_bps" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine Instance disk throttled bps"
 
 	program_text = <<-EOF
-		A = data('instance/disk/throttled_read_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
-		B = data('instance/disk/throttled_write_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
-		C = data('instance/disk/read_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
-		D = data('instance/disk/write_bytes_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
+		A = data('instance/disk/throttled_read_bytes_count', ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
+		B = data('instance/disk/throttled_write_bytes_count', ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
+		C = data('instance/disk/read_bytes_count', ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
+		D = data('instance/disk/write_bytes_count', ${module.filter-tags.filter_custom})${var.disk_throttled_bps_aggregation_function}
 		signal = ((A+B)/(C+D)).scale(100).${var.disk_throttled_bps_transformation_function}(over='${var.disk_throttled_bps_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_throttled_bps_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.disk_throttled_bps_threshold_warning}) and when(signal <= ${var.disk_throttled_bps_threshold_critical})).publish('WARN')
@@ -82,10 +82,10 @@ resource "signalfx_detector" "disk_throttled_ops" {
 	name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Compute Engine Instance disk throttled ops"
 
 	program_text = <<-EOF
-		A = data('instance/disk/throttled_read_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
-		B = data('instance/disk/throttled_write_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
-		C = data('instance/disk/read_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
-		D = data('instance/disk/write_ops_count' and ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
+		A = data('instance/disk/throttled_read_ops_count', ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
+		B = data('instance/disk/throttled_write_ops_count', ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
+		C = data('instance/disk/read_ops_count', ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
+		D = data('instance/disk/write_ops_count', ${module.filter-tags.filter_custom})${var.disk_throttled_ops_aggregation_function}
 		signal = ((A+B)/(C+D)).scale(100).${var.disk_throttled_ops_transformation_function}(over='${var.disk_throttled_ops_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_throttled_ops_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.disk_throttled_ops_threshold_warning}) and when(signal <= ${var.disk_throttled_ops_threshold_critical})).publish('WARN')
