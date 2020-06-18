@@ -22,7 +22,7 @@ resource "signalfx_detector" "cpu_utilization" {
 
   program_text = <<-EOF
 		A = data('database/cpu/utilization', ${module.filter-tags.filter_custom})${var.cpu_utilization_aggregation_function}
-		signal = (A*100).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
+		signal = (A.scale(100)).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cpu_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.cpu_utilization_threshold_warning}) and when(signal <= ${var.cpu_utilization_threshold_critical})).publish('WARN')
 	EOF
@@ -51,7 +51,7 @@ resource "signalfx_detector" "disk_utilization" {
 
   program_text = <<-EOF
 		A = data('database/disk/utilization', ${module.filter-tags.filter_custom})${var.disk_utilization_aggregation_function}
-		signal = (A*100).${var.disk_utilization_transformation_function}(over='${var.disk_utilization_transformation_window}').publish('signal')
+		signal = (A.scale(100)).${var.disk_utilization_transformation_function}(over='${var.disk_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.disk_utilization_threshold_warning}) and when(signal <= ${var.disk_utilization_threshold_critical})).publish('WARN')
 	EOF
@@ -99,7 +99,7 @@ resource "signalfx_detector" "memory_utilization" {
 
   program_text = <<-EOF
 		A = data('database/memory/utilization', ${module.filter-tags.filter_custom})${var.memory_utilization_aggregation_function}
-		signal = (A*100).${var.memory_utilization_transformation_function}(over='${var.memory_utilization_transformation_window}').publish('signal')
+		signal = (A.scale(100)).${var.memory_utilization_transformation_function}(over='${var.memory_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.memory_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.memory_utilization_threshold_warning}) and when(signal <= ${var.memory_utilization_threshold_critical})).publish('WARN')
 	EOF
