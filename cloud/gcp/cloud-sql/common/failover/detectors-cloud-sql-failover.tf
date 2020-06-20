@@ -11,7 +11,7 @@ resource "signalfx_detector" "failover_unavailable" {
     severity              = "Warning"
     detect_label          = "WARN"
     disabled              = coalesce(var.failover_unavailable_disabled, var.detectors_disabled)
-    notifications         = coalescelist(var.var.failover_unavailable_notifications, var.notifications)
+    notifications         = coalescelist(var.failover_unavailable_notifications, var.notifications)
     parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
   }
 }
