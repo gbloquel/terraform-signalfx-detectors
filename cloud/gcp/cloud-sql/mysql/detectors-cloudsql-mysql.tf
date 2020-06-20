@@ -1,5 +1,5 @@
 resource "signalfx_detector" "replication_lag" {
-  name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP CloudSQL MySQL replication lag"
+  name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL MySQL replication lag"
 
   program_text = <<-EOF
 		signal = data('database/mysql/replication/seconds_behind_master', ${module.filter-tags.filter_custom})${var.replication_lag_aggregation_function}.${var.replication_lag_transformation_function}(over='${var.replication_lag_transformation_window}').publish('signal')
