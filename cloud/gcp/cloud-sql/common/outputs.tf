@@ -22,8 +22,3 @@ output "memory_utilization_forecast_id" {
   description = "id for detector memory_utilization_forecast"
   value       = signalfx_detector.memory_utilization_forecast.*.id
 }
-
-output "failover_unavailable_id" {
-  description = "id for detector failover_unavailable"
-  value       = signalfx_detector.failover_unavailable.*.id
-}
