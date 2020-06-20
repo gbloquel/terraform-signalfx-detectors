@@ -392,32 +392,8 @@ variable "failover_unavailable_disabled" {
   default     = null
 }
 
-variable "failover_unavailable_disabled_critical" {
-  description = "Disable critical alerting rule for failover_unavailable detector"
-  type        = bool
-  default     = null
-}
-
-variable "failover_unavailable_disabled_warning" {
-  description = "Disable warning alerting rule for failover_unavailable detector"
-  type        = bool
-  default     = null
-}
-
 variable "failover_unavailable_notifications" {
   description = "Notification recipients list for every alerting rules of failover_unavailable detector"
-  type        = list
-  default     = []
-}
-
-variable "failover_unavailable_notifications_warning" {
-  description = "Notification recipients list for warning alerting rule of failover_unavailable detector"
-  type        = list
-  default     = []
-}
-
-variable "failover_unavailable_notifications_critical" {
-  description = "Notification recipients list for critical alerting rule of failover_unavailable detector"
   type        = list
   default     = []
 }
@@ -438,12 +414,6 @@ variable "failover_unavailable_transformation_window" {
   description = "Transformation window for failover_unavailable detector (i.e. 5m, 20m, 1h, 1d)"
   type        = string
   default     = "10m"
-}
-
-variable "failover_unavailable_threshold_critical" {
-  description = "Critical threshold for failover_unavailable detector"
-  type        = number
-  default     = 0
 }
 
 variable "failover_unavailable_threshold_warning" {

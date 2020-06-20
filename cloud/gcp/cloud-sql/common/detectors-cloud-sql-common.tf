@@ -28,7 +28,7 @@ resource "signalfx_detector" "cpu_utilization" {
 	EOF
 
   rule {
-    description           = "is too high > ${var.cpu_utilization_threshold_critical}"
+    description           = "is too high > ${var.cpu_utilization_threshold_critical}%"
     severity              = "Critical"
     detect_label          = "CRIT"
     disabled              = coalesce(var.cpu_utilization_disabled_critical, var.cpu_utilization_disabled, var.detectors_disabled)
@@ -37,7 +37,7 @@ resource "signalfx_detector" "cpu_utilization" {
   }
 
   rule {
-    description           = "is too high > ${var.cpu_utilization_threshold_warning}"
+    description           = "is too high > ${var.cpu_utilization_threshold_warning}%"
     severity              = "Warning"
     detect_label          = "WARN"
     disabled              = coalesce(var.cpu_utilization_disabled_warning, var.cpu_utilization_disabled, var.detectors_disabled)
@@ -57,7 +57,7 @@ resource "signalfx_detector" "disk_utilization" {
 	EOF
 
   rule {
-    description           = "is too high > ${var.disk_utilization_threshold_critical}"
+    description           = "is too high > ${var.disk_utilization_threshold_critical}%"
     severity              = "Critical"
     detect_label          = "CRIT"
     disabled              = coalesce(var.disk_utilization_disabled_critical, var.disk_utilization_disabled, var.detectors_disabled)
@@ -66,7 +66,7 @@ resource "signalfx_detector" "disk_utilization" {
   }
 
   rule {
-    description           = "is too high > ${var.disk_utilization_threshold_warning}"
+    description           = "is too high > ${var.disk_utilization_threshold_warning}%"
     severity              = "Warning"
     detect_label          = "WARN"
     disabled              = coalesce(var.disk_utilization_disabled_warning, var.disk_utilization_disabled, var.detectors_disabled)
@@ -105,7 +105,7 @@ resource "signalfx_detector" "memory_utilization" {
 	EOF
 
   rule {
-    description           = "is too high > ${var.memory_utilization_threshold_critical}"
+    description           = "is too high > ${var.memory_utilization_threshold_critical}%"
     severity              = "Critical"
     detect_label          = "CRIT"
     disabled              = coalesce(var.memory_utilization_disabled_critical, var.memory_utilization_disabled, var.detectors_disabled)
@@ -114,7 +114,7 @@ resource "signalfx_detector" "memory_utilization" {
   }
 
   rule {
-    description           = "is too high > ${var.memory_utilization_threshold_warning}"
+    description           = "is too high > ${var.memory_utilization_threshold_warning}%"
     severity              = "Warning"
     detect_label          = "WARN"
     disabled              = coalesce(var.memory_utilization_disabled_warning, var.memory_utilization_disabled, var.detectors_disabled)
@@ -143,29 +143,19 @@ resource "signalfx_detector" "memory_utilization_forecast" {
 }
 
 resource "signalfx_detector" "failover_unavailable" {
-  name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL failover unavailable"
+  name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] GCP Cloud SQL failover"
 
   program_text = <<-EOF
 		signal = data('database/available_for_failover', ${module.filter-tags.filter_custom})${var.failover_unavailable_aggregation_function}.${var.failover_unavailable_transformation_function}(over='${var.failover_unavailable_transformation_window}').publish('signal')
-		detect(when(signal <= ${var.failover_unavailable_threshold_critical})).publish('CRIT')
-		detect(when(signal <= ${var.failover_unavailable_threshold_warning}) and when(signal > ${var.failover_unavailable_threshold_critical})).publish('WARN')
+		detect(when(signal < ${var.failover_unavailable_threshold_warning})).publish('WARN')
 	EOF
 
   rule {
-    description           = "is too low <= ${var.failover_unavailable_threshold_critical}"
-    severity              = "Critical"
-    detect_label          = "CRIT"
-    disabled              = coalesce(var.failover_unavailable_disabled_critical, var.failover_unavailable_disabled, var.detectors_disabled)
-    notifications         = coalescelist(var.failover_unavailable_notifications_critical, var.failover_unavailable_notifications, var.notifications)
-    parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
-  }
-
-  rule {
-    description           = "is too low <= ${var.failover_unavailable_threshold_warning}"
+    description           = "is unavailable"
     severity              = "Warning"
     detect_label          = "WARN"
-    disabled              = coalesce(var.failover_unavailable_disabled_warning, var.failover_unavailable_disabled, var.detectors_disabled)
-    notifications         = coalescelist(var.failover_unavailable_notifications_warning, var.failover_unavailable_notifications, var.notifications)
+    disabled              = coalesce(var.failover_unavailable_disabled, var.detectors_disabled)
+    notifications         = coalescelist(var.var.failover_unavailable_notifications, var.notifications)
     parameterized_subject = "[{{ruleSeverity}}]{{{detectorName}}} {{{readableRule}}} ({{inputs.signal.value}}) on {{{dimensions}}}"
   }
 }
