@@ -3,7 +3,7 @@ resource "signalfx_detector" "heartbeat" {
 
   program_text = <<-EOF
 		from signalfx.detectors.not_reporting import not_reporting
-		signal = data('database/cpu/usage_time', ${module.filter-tags.filter_custom}).publish('signal')
+		signal = data('database/cpu/usage_time', filter=and (not filter('gcp_status', '{Code=3, Name=STOPPING}', '{Code=4, Name=TERMINATED}')) and ${module.filter-tags.filter_custom}).publish('signal')
 		not_reporting.detector(stream=signal, resource_identifier=['database_id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
 	EOF
 
