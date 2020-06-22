@@ -136,6 +136,12 @@ variable "concurrent_queries_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "concurrent_queries_clear_duration" {
+  description = "Duration for the concurrent_queries clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Execution_time detectors
 
 variable "execution_time_disabled" {
@@ -214,6 +220,12 @@ variable "execution_time_aperiodic_percentage" {
   description = "Percentage for the execution_time block"
   type        = number
   default     = 0.9
+}
+
+variable "execution_time_clear_duration" {
+  description = "Duration for the execution_time clear condition"
+  type        = string
+  default     = "15m"
 }
 
 # Scanned_bytes detectors
@@ -296,6 +308,12 @@ variable "scanned_bytes_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "scanned_bytes_clear_duration" {
+  description = "Duration for the scanned_bytes clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Scanned_bytes_billed detectors
 
 variable "scanned_bytes_billed_disabled" {
@@ -376,6 +394,12 @@ variable "scanned_bytes_billed_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "scanned_bytes_billed_clear_duration" {
+  description = "Duration for the scanned_bytes_billed clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Available_slots detectors
 
 variable "available_slots_disabled" {
@@ -454,6 +478,12 @@ variable "available_slots_aperiodic_percentage" {
   description = "Percentage for the available_slots block"
   type        = number
   default     = 0.9
+}
+
+variable "available_slots_clear_duration" {
+  description = "Duration for the available_slots clear condition"
+  type        = string
+  default     = "15m"
 }
 
 # Stored_bytes detectors
