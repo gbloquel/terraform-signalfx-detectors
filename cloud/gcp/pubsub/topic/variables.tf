@@ -136,6 +136,12 @@ variable "sending_operations_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "sending_operations_clear_duration" {
+  description = "Duration for the sending_operations clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Unavailable_sending_operations detectors
 
 variable "unavailable_sending_operations_disabled" {
@@ -216,6 +222,12 @@ variable "unavailable_sending_operations_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "unavailable_sending_operations_clear_duration" {
+  description = "Duration for the unavailable_sending_operations clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Unavailable_sending_operations_ratio detectors
 
 variable "unavailable_sending_operations_ratio_disabled" {
@@ -294,4 +306,10 @@ variable "unavailable_sending_operations_ratio_aperiodic_percentage" {
   description = "Percentage for the unavailable_sending_operations_ratio block"
   type        = number
   default     = 0.9
+}
+
+variable "unavailable_sending_operations_ratio_clear_duration" {
+  description = "Duration for the unavailable_sending_operations_ratio clear condition"
+  type        = string
+  default     = "15m"
 }
