@@ -135,3 +135,9 @@ variable "too_many_locks_aperiodic_percentage" {
   type        = number
   default     = 0.9
 }
+
+variable "too_many_locks_clear_duration" {
+  description = "Duration for the too_many_locks clear condition"
+  type        = string
+  default     = "15m"
+}
