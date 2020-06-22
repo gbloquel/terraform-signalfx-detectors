@@ -536,6 +536,12 @@ variable "stored_bytes_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "stored_bytes_clear_duration" {
+  description = "Duration for the stored_bytes clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # table_count detectors
 
 variable "table_count_disabled" {
@@ -614,6 +620,12 @@ variable "table_count_aperiodic_percentage" {
   description = "Percentage for the table_count block"
   type        = number
   default     = 0.9
+}
+
+variable "table_count_clear_duration" {
+  description = "Duration for the table_count clear condition"
+  type        = string
+  default     = "15m"
 }
 
 # uploaded_bytes detectors
@@ -696,6 +708,12 @@ variable "uploaded_bytes_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "uploaded_bytes_clear_duration" {
+  description = "Duration for the uploaded_bytes clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # uploaded_bytes_billed detectors
 
 variable "uploaded_bytes_billed_disabled" {
@@ -774,4 +792,10 @@ variable "uploaded_bytes_billed_aperiodic_percentage" {
   description = "Percentage for the uploaded_bytes_billed block"
   type        = number
   default     = 0.9
+}
+
+variable "uploaded_bytes_billed_clear_duration" {
+  description = "Duration for the uploaded_bytes_billed clear condition"
+  type        = string
+  default     = "15m"
 }
