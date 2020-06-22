@@ -284,6 +284,12 @@ variable "backend_latency_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "backend_latency_clear_duration" {
+  description = "Duration for the backend_latency clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Backend_latency_bucket detectors
 
 variable "backend_latency_bucket_disabled" {
@@ -364,6 +370,12 @@ variable "backend_latency_bucket_aperiodic_percentage" {
   default     = 0.9
 }
 
+variable "backend_latency_bucket_clear_duration" {
+  description = "Duration for the backend_latency_bucket clear condition"
+  type        = string
+  default     = "15m"
+}
+
 # Request_count detectors
 
 variable "request_count_disabled" {
@@ -442,4 +454,10 @@ variable "request_count_aperiodic_percentage" {
   description = "Percentage for the request_count block"
   type        = number
   default     = 0.9
+}
+
+variable "request_count_clear_duration" {
+  description = "Duration for the request_count clear condition"
+  type        = string
+  default     = "15m"
 }
