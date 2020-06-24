@@ -3,7 +3,7 @@ resource "signalfx_detector" "status_check" {
 
   program_text = <<-EOF
         signal = data('gauge.status', filter=filter('plugin', 'nagios') and ${module.filter-tags.filter_custom})${var.status_check_aggregation_function}.${var.status_check_transformation_function}(over='${var.status_check_transformation_window}').publish('signal')
-        detect(when(signal >= 1) and when(signal < 2)).publish('WARN')
+        detect(when(signal >= threshold(1)) and when(signal < 2)).publish('WARN')
         detect(when(signal >= threshold(2))).publish('CRIT')
   EOF
 
