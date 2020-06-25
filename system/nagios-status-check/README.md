@@ -48,11 +48,11 @@ STATUS=( ["OK"]=0 ["WARNING"]=1 ["CRITICAL"]=2 ["UNKNOWN"]=3 )
 while sleep "$INTERVAL"
 do
 	out=$(exec $@)
-	if [[ $out =~ "OK" ]]; then
+	if [[ $out =~ "^OK" ]]; then
 		value=${STATUS["OK"]}
-	elif [[ $out =~ "WARNING" ]]; then
+	elif [[ $out =~ "^WARNING" ]]; then
 		value=${STATUS["WARNING"]}
-	elif [[ $out =~ "CRITICAL" ]]; then
+	elif [[ $out =~ "^CRITICAL" ]]; then
 		value=${STATUS["CRITICAL"]}
 	else 
 		value=${STATUS["UNKNOWN"]}
