@@ -149,7 +149,7 @@ resource "signalfx_detector" "too_much_5xx_backend" {
 		B = data('RequestCount', filter=filter('namespace', 'AWS/ELB') and filter('stat', 'sum') and filter('LoadBalancerName', '*') and (not filter('AvailabilityZone', '*')) and ${module.filter-tags.filter_custom}, extrapolation='zero', rollup='sum')
 		signal = (A/B).scale(100).fill(value=0).publish('signal')
 		detect(when(signal > threshold(${var.too_much_5xx_backend_threshold_critical}), lasting='5m') and when(B > ${var.too_much_5xx_backend_threshold_number_requests})).publish('CRIT')
-		detect(when(signal > threshold(${var.too_much_5xx_backend_threshold_warning}, lasting='5m') and when(B > ${var.too_much_5xx_backend_threshold_number_requests})) and when(signal <= ${var.too_much_5xx_backend_threshold_critical})).publish('WARN')
+		detect(when(signal > threshold(${var.too_much_5xx_backend_threshold_warning}), lasting='5m') and when(B > ${var.too_much_5xx_backend_threshold_number_requests}) and when(signal <= ${var.too_much_5xx_backend_threshold_critical})).publish('WARN')
 EOF
 
   rule {
