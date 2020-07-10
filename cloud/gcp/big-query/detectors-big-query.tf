@@ -5,7 +5,7 @@ resource "signalfx_detector" "heartbeat" {
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('slots/allocated_for_project_and_job_type', (not filter('gcp_status', '{Code=3, Name=STOPPING}', '{Code=4, Name=TERMINATED}')) and ${module.filter-tags.filter_custom}).publish('signal')
 		not_reporting.detector(stream=signal, resource_identifier=['project_id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
-  EOF
+EOF
 
   rule {
     description           = "has not reported in ${var.heartbeat_timeframe}"
@@ -27,7 +27,7 @@ resource "signalfx_detector" "concurrent_queries" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.concurrent_queries_threshold_warning}, ${var.concurrent_queries_threshold_critical}, 'within_range', lasting('${var.concurrent_queries_aperiodic_duration}', ${var.concurrent_queries_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.concurrent_queries_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.concurrent_queries_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.concurrent_queries_threshold_critical}"
@@ -59,7 +59,7 @@ resource "signalfx_detector" "execution_time" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.execution_time_threshold_warning}, ${var.execution_time_threshold_critical}, 'within_range', lasting('${var.execution_time_aperiodic_duration}', ${var.execution_time_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.execution_time_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.execution_time_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.execution_time_threshold_critical}"
@@ -91,7 +91,7 @@ resource "signalfx_detector" "scanned_bytes" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.scanned_bytes_threshold_warning}, ${var.scanned_bytes_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_aperiodic_duration}', ${var.scanned_bytes_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.scanned_bytes_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.scanned_bytes_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.scanned_bytes_threshold_critical}"
@@ -123,7 +123,7 @@ resource "signalfx_detector" "scanned_bytes_billed" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.scanned_bytes_billed_threshold_warning}, ${var.scanned_bytes_billed_threshold_critical}, 'within_range', lasting('${var.scanned_bytes_billed_aperiodic_duration}', ${var.scanned_bytes_billed_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.scanned_bytes_billed_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.scanned_bytes_billed_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.scanned_bytes_billed_threshold_critical}"
@@ -155,7 +155,7 @@ resource "signalfx_detector" "available_slots" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.available_slots_threshold_warning}, ${var.available_slots_threshold_critical}, 'within_range', lasting('${var.available_slots_aperiodic_duration}', ${var.available_slots_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.available_slots_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.available_slots_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too low < ${var.available_slots_threshold_critical}"
@@ -187,7 +187,7 @@ resource "signalfx_detector" "stored_bytes" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.stored_bytes_threshold_warning}, ${var.stored_bytes_threshold_critical}, 'within_range', lasting('${var.stored_bytes_aperiodic_duration}', ${var.stored_bytes_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.stored_bytes_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.stored_bytes_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.stored_bytes_threshold_critical}"
@@ -219,7 +219,7 @@ resource "signalfx_detector" "table_count" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.table_count_threshold_warning}, ${var.table_count_threshold_critical}, 'within_range', lasting('${var.table_count_aperiodic_duration}', ${var.table_count_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.table_count_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.table_count_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.table_count_threshold_critical}"
@@ -251,7 +251,7 @@ resource "signalfx_detector" "uploaded_bytes" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.uploaded_bytes_threshold_warning}, ${var.uploaded_bytes_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_aperiodic_duration}', ${var.uploaded_bytes_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.uploaded_bytes_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.uploaded_bytes_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.uploaded_bytes_threshold_critical}"
@@ -283,7 +283,7 @@ resource "signalfx_detector" "uploaded_bytes_billed" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.uploaded_bytes_billed_threshold_warning}, ${var.uploaded_bytes_billed_threshold_critical}, 'within_range', lasting('${var.uploaded_bytes_billed_aperiodic_duration}', ${var.uploaded_bytes_billed_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.uploaded_bytes_billed_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.uploaded_bytes_billed_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.uploaded_bytes_billed_threshold_critical}"

@@ -5,7 +5,7 @@ resource "signalfx_detector" "heartbeat" {
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('subscription/pull_request_count', filter=(not filter('gcp_status', '{Code=3, Name=STOPPING}', '{Code=4, Name=TERMINATED}')) and ${module.filter-tags.filter_custom}).publish('signal')
 		not_reporting.detector(stream=signal, resource_identifier=['subscription_id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
-	EOF
+EOF
 
   rule {
     description           = "has not reported in ${var.heartbeat_timeframe}"
@@ -24,7 +24,7 @@ resource "signalfx_detector" "oldest_unacked_message" {
 		signal = data('subscription/oldest_unacked_message_age', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.oldest_unacked_message_aggregation_function}.${var.oldest_unacked_message_transformation_function}(over='${var.oldest_unacked_message_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.oldest_unacked_message_threshold_critical})).publish('CRIT')
 		detect(when(signal >= ${var.oldest_unacked_message_threshold_warning}) and when(signal < ${var.oldest_unacked_message_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is too old >= ${var.oldest_unacked_message_threshold_critical}"
@@ -53,7 +53,7 @@ resource "signalfx_detector" "push_latency" {
 		signal = data('subscription/push_request_latencies', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.push_latency_aggregation_function}.${var.push_latency_transformation_function}(over='${var.push_latency_transformation_window}').publish('signal')
 		detect(when(signal >= ${var.push_latency_threshold_critical})).publish('CRIT')
 		detect(when(signal >= ${var.push_latency_threshold_warning}) and when(signal < ${var.push_latency_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is too high >= ${var.push_latency_threshold_critical}"
@@ -82,7 +82,7 @@ resource "signalfx_detector" "push_latency_anomaly" {
 		from signalfx.detectors.against_recent import against_recent
 		signal = data('subscription/push_request_latencies', filter=filter('monitored_resource', 'pubsub_subscription') and ${module.filter-tags.filter_custom})${var.push_latency_anomaly_aggregation_function}.${var.push_latency_anomaly_transformation_function}(over='${var.push_latency_anomaly_transformation_window}').publish('signal')
 		against_recent.detector_mean_std(signal, current_window=duration('${var.push_latency_anomaly_current_window}'), historical_window=duration('${var.push_latency_anomaly_historical_window}'), fire_num_stddev=${var.push_latency_anomaly_fire_num_stddev}, clear_num_stddev=${var.push_latency_anomaly_clear_num_stddev}, orientation='${var.push_latency_anomaly_orientation}', calculation_mode='${var.push_latency_anomaly_calculation_mode}').publish('CRIT')
-	EOF
+EOF
 
   rule {
     description           = "at >= ${var.push_latency_anomaly_threshold_critical}"

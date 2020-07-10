@@ -4,7 +4,7 @@ resource "signalfx_detector" "failover_unavailable" {
   program_text = <<-EOF
 		signal = data('database/available_for_failover', ${module.filter-tags.filter_custom})${var.failover_unavailable_aggregation_function}.${var.failover_unavailable_transformation_function}(over='${var.failover_unavailable_transformation_window}').publish('signal')
 		detect(when(signal < ${var.failover_unavailable_threshold_warning})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is unavailable"

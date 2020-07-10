@@ -7,7 +7,7 @@ resource "signalfx_detector" "error_rate_4xx" {
 		signal = ((A/B)*100).${var.error_rate_4xx_transformation_function}(over='${var.error_rate_4xx_transformation_window}').publish('signal')
 		detect(when(signal > ${var.error_rate_4xx_threshold_critical}) and when(B > ${var.error_rate_4xx_threshold_number_requests})).publish('CRIT')
 		detect(when(signal > ${var.error_rate_4xx_threshold_warning}) and when(B > ${var.error_rate_4xx_threshold_number_requests}) and when(signal <= ${var.error_rate_4xx_threshold_critical})).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.error_rate_4xx_threshold_critical}"
@@ -37,7 +37,7 @@ resource "signalfx_detector" "error_rate_5xx" {
 		signal = ((A/(B+5))*100).${var.error_rate_5xx_transformation_function}(over='${var.error_rate_5xx_transformation_window}').publish('signal')
 		detect(when(signal > ${var.error_rate_5xx_threshold_critical}) and when(B > ${var.error_rate_5xx_threshold_number_requests})).publish('CRIT')
 		detect(when(signal > ${var.error_rate_5xx_threshold_warning}) and when(B > ${var.error_rate_5xx_threshold_number_requests}) and when(signal <= ${var.error_rate_5xx_threshold_critical})).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.error_rate_5xx_threshold_critical}"
@@ -68,7 +68,7 @@ resource "signalfx_detector" "backend_latency" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.backend_latency_threshold_warning}, ${var.backend_latency_threshold_critical}, 'within_range', lasting('${var.backend_latency_aperiodic_duration}', ${var.backend_latency_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.backend_latency_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.backend_latency_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.backend_latency_threshold_critical}"
@@ -99,7 +99,7 @@ resource "signalfx_detector" "backend_latency_bucket" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.backend_latency_bucket_threshold_warning}, ${var.backend_latency_bucket_threshold_critical}, 'within_range', lasting('${var.backend_latency_bucket_aperiodic_duration}', ${var.backend_latency_bucket_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.backend_latency_bucket_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.backend_latency_bucket_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.backend_latency_bucket_threshold_critical}"
@@ -130,7 +130,7 @@ resource "signalfx_detector" "request_count" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.request_count_threshold_warning}, ${var.request_count_threshold_critical}, 'within_range', lasting('${var.request_count_aperiodic_duration}', ${var.request_count_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.request_count_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.request_count_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high > ${var.request_count_threshold_critical}"

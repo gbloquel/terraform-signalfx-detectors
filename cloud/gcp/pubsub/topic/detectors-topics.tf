@@ -8,7 +8,7 @@ resource "signalfx_detector" "sending_operations" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.sending_operations_threshold_warning}, ${var.sending_operations_threshold_critical}, 'within_range', lasting('${var.sending_operations_aperiodic_duration}', ${var.sending_operations_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.sending_operations_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.sending_operations_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too low <= ${var.sending_operations_threshold_critical}"
@@ -39,7 +39,7 @@ resource "signalfx_detector" "unavailable_sending_operations" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.unavailable_sending_operations_threshold_warning}, ${var.unavailable_sending_operations_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_aperiodic_duration}', ${var.unavailable_sending_operations_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.unavailable_sending_operations_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.unavailable_sending_operations_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "are too high > ${var.unavailable_sending_operations_threshold_critical}"
@@ -72,7 +72,7 @@ resource "signalfx_detector" "unavailable_sending_operations_ratio" {
 		ON_Condition_WARN = conditions.generic_condition(signal, ${var.unavailable_sending_operations_ratio_threshold_warning}, ${var.unavailable_sending_operations_ratio_threshold_critical}, 'within_range', lasting('${var.unavailable_sending_operations_ratio_aperiodic_duration}', ${var.unavailable_sending_operations_ratio_aperiodic_percentage}), 'observed', strict_2=False)
 		detect(ON_Condition_CRIT, off=when(signal is None, '${var.unavailable_sending_operations_ratio_clear_duration}')).publish('CRIT')
 		detect(ON_Condition_WARN, off=when(signal is None, '${var.unavailable_sending_operations_ratio_clear_duration}')).publish('WARN')
-  EOF
+EOF
 
   rule {
     description           = "is too high >= ${var.unavailable_sending_operations_ratio_threshold_critical}"

@@ -5,7 +5,7 @@ resource "signalfx_detector" "heartbeat" {
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('database/cpu/usage_time', filter=(not filter('gcp_status', '{Code=3, Name=STOPPING}', '{Code=4, Name=TERMINATED}')) and ${module.filter-tags.filter_custom}).publish('signal')
 		not_reporting.detector(stream=signal, resource_identifier=['database_id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
-	EOF
+EOF
 
   rule {
     description           = "has not reported in ${var.heartbeat_timeframe}"
@@ -25,7 +25,7 @@ resource "signalfx_detector" "cpu_utilization" {
 		signal = (A.scale(100)).${var.cpu_utilization_transformation_function}(over='${var.cpu_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.cpu_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.cpu_utilization_threshold_warning}) and when(signal <= ${var.cpu_utilization_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is too high > ${var.cpu_utilization_threshold_critical}%"
@@ -54,7 +54,7 @@ resource "signalfx_detector" "disk_utilization" {
 		signal = (A.scale(100)).${var.disk_utilization_transformation_function}(over='${var.disk_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.disk_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.disk_utilization_threshold_warning}) and when(signal <= ${var.disk_utilization_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is too high > ${var.disk_utilization_threshold_critical}%"
@@ -82,7 +82,7 @@ resource "signalfx_detector" "disk_utilization_forecast" {
 		from signalfx.detectors.countdown import countdown
 		signal = data('database/disk/utilization', filter=${module.filter-tags.filter_custom}).publish('signal')
 		countdown.hours_left_stream_incr_detector(stream=signal, maximum_capacity=${var.disk_utilization_forecast_maximum_capacity}, lower_threshold=${var.disk_utilization_forecast_hours_till_full}, fire_lasting=lasting('${var.disk_utilization_forecast_fire_lasting_time}', ${var.disk_utilization_forecast_fire_lasting_time_percent}), clear_threshold=${var.disk_utilization_forecast_clear_hours_remaining}, clear_lasting=lasting('${var.disk_utilization_forecast_clear_lasting_time}', ${var.disk_utilization_forecast_clear_lasting_time_percent}), use_double_ewma=${var.disk_utilization_forecast_use_ewma}).publish('CRIT')
-	EOF
+EOF
 
   rule {
     description           = "in ${var.disk_utilization_forecast_hours_till_full}"
@@ -102,7 +102,7 @@ resource "signalfx_detector" "memory_utilization" {
 		signal = (A.scale(100)).${var.memory_utilization_transformation_function}(over='${var.memory_utilization_transformation_window}').publish('signal')
 		detect(when(signal > ${var.memory_utilization_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.memory_utilization_threshold_warning}) and when(signal <= ${var.memory_utilization_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
   rule {
     description           = "is too high > ${var.memory_utilization_threshold_critical}%"
@@ -130,7 +130,7 @@ resource "signalfx_detector" "memory_utilization_forecast" {
 		from signalfx.detectors.countdown import countdown
 		signal = data('database/memory/utilization', filter=${module.filter-tags.filter_custom}).publish('signal')
 		countdown.hours_left_stream_incr_detector(stream=signal, maximum_capacity=${var.memory_utilization_forecast_maximum_capacity}, lower_threshold=${var.memory_utilization_forecast_hours_till_full}, fire_lasting=lasting('${var.memory_utilization_forecast_fire_lasting_time}', ${var.memory_utilization_forecast_fire_lasting_time_percent}), clear_threshold=${var.memory_utilization_forecast_clear_hours_remaining}, clear_lasting=lasting('${var.memory_utilization_forecast_clear_lasting_time}', ${var.memory_utilization_forecast_clear_lasting_time_percent}), use_double_ewma=${var.memory_utilization_forecast_use_ewma}).publish('CRIT')
-	EOF
+EOF
 
   rule {
     description           = "in ${var.memory_utilization_forecast_hours_till_full}"
