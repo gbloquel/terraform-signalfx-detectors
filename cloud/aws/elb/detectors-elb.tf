@@ -145,9 +145,9 @@ resource "signalfx_detector" "too_much_5xx_backend" {
   name = "${join("", formatlist("[%s]", var.prefixes))}[${var.environment}] AWS ELB backend 5xx error rate"
 
   program_text = <<-EOF
-		A = data('HTTPCode_Backend_5XX', filter=filter('namespace', 'AWS/ELB') and filter('stat', 'sum') and (not filter('AvailabilityZone', '*')) and ${module.filter-tags.filter_custom}, rollup='sum', extrapolation='zero').${var.too_much_5xx_backend_transformation_function}(over='${var.too_much_5xx_backend_transformation_window}')${var.too_much_5xx_backend_aggregation_function}
-		B = data('RequestCount', filter=filter('namespace', 'AWS/ELB') and filter('stat', 'sum') and (not filter('AvailabilityZone', '*')) and ${module.filter-tags.filter_custom}, rollup='sum', extrapolation='zero').${var.too_much_5xx_backend_transformation_function}(over='${var.too_much_5xx_backend_transformation_window}')${var.too_much_5xx_backend_aggregation_function}
-		signal = (A/B).scale(100).publish('signal')
+		A = data('HTTPCode_Backend_5XX', filter=filter('namespace', 'AWS/ELB') and filter('stat', 'sum') and (not filter('AvailabilityZone', '*')) and ${module.filter-tags.filter_custom}, rollup='sum').${var.too_much_5xx_backend_transformation_function}(over='${var.too_much_5xx_backend_transformation_window}')${var.too_much_5xx_backend_aggregation_function}
+		B = data('RequestCount', filter=filter('namespace', 'AWS/ELB') and filter('stat', 'sum') and (not filter('AvailabilityZone', '*')) and ${module.filter-tags.filter_custom}, rollup='sum').${var.too_much_5xx_backend_transformation_function}(over='${var.too_much_5xx_backend_transformation_window}')${var.too_much_5xx_backend_aggregation_function}
+		signal = (A/B).scale(100).fill(value=0).publish('signal')
 		detect(when(signal > ${var.too_much_5xx_backend_threshold_critical}) and when(B > ${var.too_much_5xx_backend_threshold_number_requests})).publish('CRIT')
 		detect(when(signal > ${var.too_much_5xx_backend_threshold_warning}) and when(B > ${var.too_much_5xx_backend_threshold_number_requests}) and when(signal <= ${var.too_much_5xx_backend_threshold_critical})).publish('WARN')
 EOF
