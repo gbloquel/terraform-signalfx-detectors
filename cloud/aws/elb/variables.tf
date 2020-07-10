@@ -393,13 +393,13 @@ variable "too_much_5xx_backend_aggregation_function" {
 variable "too_much_5xx_backend_transformation_function" {
   description = "Transformation function for too_much_5xx_backend detector (mean, min, max)"
   type        = string
-  default     = "sum"
+  default     = "mean"
 }
 
 variable "too_much_5xx_backend_transformation_window" {
   description = "Transformation window for too_much_5xx_backend detector (i.e. 5m, 20m, 1h, 1d)"
   type        = string
-  default     = "5m"
+  default     = "10m"
 }
 
 variable "too_much_5xx_backend_threshold_critical" {
