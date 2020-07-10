@@ -5,7 +5,7 @@ resource "signalfx_detector" "heartbeat" {
 		from signalfx.detectors.not_reporting import not_reporting
 		signal = data('Agent/MetricsReported/count/requests_per_minute/*', ${module.filter-tags.filter_custom})
 		not_reporting.detector(stream=signal, resource_identifier=['id'], duration='${var.heartbeat_timeframe}').publish('CRIT')
-	EOF
+EOF
 
 	rule {
 		description           = "has not reported in ${var.heartbeat_timeframe}"
@@ -24,7 +24,7 @@ resource "signalfx_detector" "app_error_rate" {
 		signal = data('Errors/all/errors_per_minute/*', ${module.filter-tags.filter_custom})${var.app_error_rate_aggregation_function}.${var.app_error_rate_transformation_function}(over='${var.app_error_rate_transformation_window}')
 		detect(when(signal > ${var.app_error_rate_threshold_critical})).publish('CRIT')
 		detect(when(signal > ${var.app_error_rate_threshold_warning}) and when(signal <= ${var.app_error_rate_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
 	rule {
 		description           = "is too high > ${var.app_error_rate_threshold_critical}s"
@@ -53,7 +53,7 @@ resource "signalfx_detector" "app_apdex_score" {
 		signal = data('Apdex/score/*', ${module.filter-tags.filter_custom})${var.app_apdex_score_aggregation_function}.${var.app_apdex_score_transformation_function}(over='${var.app_apdex_score_transformation_window}')
 		detect(when(signal < ${var.app_apdex_score_threshold_critical})).publish('CRIT')
 		detect(when(signal < ${var.app_apdex_score_threshold_warning}) and when(signal >= ${var.app_apdex_score_threshold_critical})).publish('WARN')
-	EOF
+EOF
 
 	rule {
 		description           = "has fallen below critical capacity < ${var.app_apdex_score_threshold_critical}s"
